@@ -1,0 +1,17 @@
+from django import forms
+from .models import ModelProject
+
+class FormProject(forms.ModelForm):
+    class Meta:
+        model = ModelProject
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if isinstance(field, forms.DateField):
+                field.widget = forms.DateInput(attrs={'type': 'date'})
+                if self.instance and getattr(self.instance, field_name):
+                    date_value = getattr(self.instance, field_name)
+                    formatted_date = date_value.strftime('%Y-%m-%d')
+                    self.initial[field_name] = formatted_date

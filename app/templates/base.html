@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+  <style>
+    body {
+        font-family: 'Open Sans', sans-serif;
+        color: light-dark(#333b3c, #efefec);
+        background-color: light-dark(#efedea, #223a2c);
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        background-color: #0096c7;
+        color: #fff;
+        text-align: center;
+    }
+
+    footer {
+        background-color: #ccc;
+        color: #333;
+        padding: 20px;
+        text-align: center;
+    }
+
+    nav {
+        background-color: #00B36A;
+        color: #fff;
+        height: 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+    }
+
+    nav ul li {
+        margin: 0 10px;
+    }
+
+    nav ul li a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+        padding: 15px;
+        transition: all 0.3s ease;
+    }
+
+    nav ul li a:hover {
+        background-color: #2E8B57;
+    }
+
+    nav ul li.active a {
+        background-color: #666;
+    }
+
+    nav ul li.active a:hover {
+        background-color: #999;
+    }
+
+
+  </style>
+</head>
+{% load user_agents %}
+{% load static %}
+<body>
+  <header>
+    <nav>
+      <ul>
+        <img type="image" src="{% static 'nav/eg-logo-branco-transp.png' %}" width="115" height="28" unselectable="on">
+        {% comment %}
+        {% if user.is_authenticated %}
+          <li>Olá, {{ user.username }}</li>
+          <li><a href="{% url 'new_car' %}">Cadastrar Carro</a></li>
+        {% endif %}
+        {% if not user.is_authenticated %}
+          <li><a href="{% url 'register' %}">Cadastre-se</a></li>
+          <li><a href="{% url 'login' %}">Login</a></li>
+        {% endif %}
+        {% endcomment %}
+
+        <li><a href="{% url 'client' %}">Clientes</a></li>
+        <li><a href="{% url 'project' %}">Projetos</a></li>
+        <li><a href="{% url 'inflow' %}">Entradas</a></li>
+        <li><a href="{% url 'supplier' %}">Fornecedores</a></li>
+        {% comment %}
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'logout' %}">Sair</a></li>
+        {% endif %}
+        {% endcomment %}
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <footer>
+    <p>&copy; Eletrogrow 2024</p>
+  </footer>
+</body>
+</html>

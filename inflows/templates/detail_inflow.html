@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block  title %}
+EG - Detalhar Receita
+{%  endblock %}
+{% block content %}
+  <style>
+    .buttons-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      display: inline-block;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 0 10px;
+    }
+
+    .btn-danger {
+      background-color: #d9534f;
+      text-decoration: none !important;
+    }
+
+    .btn-danger:hover {
+      background-color: #d2221c;
+    }
+
+    .error-message {
+      color: #d9534f;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    a {
+      text-decoration: none !important;
+    }
+  </style>
+  <div class="project">
+    <p><strong>Receita:</strong> {{ object.income }}</p>
+    <p><strong>Pago:</strong> <span style="color: {% if object.paid %}green{% else %}red{% endif %};">
+                                {% if object.paid %} ✔ {% else %} ✖ {% endif %}
+                              </span>
+    </p>
+    <p><strong>Cliente:</strong> {{ object.project.client|default_if_none:"-" }}</p>
+    <p><strong>Projeto:</strong> {{ object.project|default_if_none:"-"}}</p>
+    <p><strong>Data de vencimento:</strong> {{ object.due_date }}</p>
+    <p><strong>Método de pagamento:</strong> {{ object.payment_method }}</p>
+    <p><strong>Valor:</strong> R$ {{ object.value|floatformat:2 }}</p>
+  </div>
+    <div class="buttons-container">
+      <a href="{% url 'update_inflow' pk=object.pk %}" class="btn btn-success">Editar</a>
+      <a href="{% url 'delete_inflow' pk=object.pk %}" class="btn btn-danger">Deletar</a>
+    </div>
+{% endblock %}

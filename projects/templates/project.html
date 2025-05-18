@@ -1,0 +1,94 @@
+{% extends "base.html"  %}
+{% block  title %}
+EG - Projetos
+{%  endblock %}
+{% block content %}
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+.top-line{
+    display:flex;
+    gap: 16px;
+    }
+</style>
+<div class="top-line">
+<form method="GET" action="{% url 'project' %}">
+    <input type="text" name="search" placeholder="Buscar projeto...">
+    <button type="submit"; class="btn btn-success btn-sm">Buscar</button>
+</form>
+    <a href="{% url 'new_project' %}" class="btn btn-success btn-sm">Novo Projeto</a>
+</div>
+<div class="project-list">
+  {% if projects %}
+      {% if request.user_agent.is_mobile %}
+         <table>
+          <tr>
+            <th>Nome</th>
+            <th>Cliente</th>
+            <th>Detalhe</th>
+          </tr>
+          {% for project in projects %}
+          <tr>
+            <td>{{project.name}}</td>
+            <td>{{project.client}}</td>
+              <td>
+                  <div class="update-button"; style="text-align:center">
+                      <a href="{% url 'detail_project' pk=project.pk %}" class="btn btn-success btn-sm">
+                        <i class="bi bi-list"></i>
+                      </a>
+                  </div>
+              </td>
+          </tr>
+           {% endfor %}
+         </table>
+      {% else  %}
+        <table>
+          <tr>
+            <th>Nome</th>
+            <th>Cliente</th>
+            <th>Início do Projeto</th>
+            <th>Início da Obra</th>
+            <th>Fim do projeto/obra</th>
+            <th>Parcelas</th>
+            <th>Valor</th>
+            <th>Data de Vencimento</th>
+            <th>Detalhe</th>
+          </tr>
+          {% for project in projects %}
+          <tr>
+            <td>{{project.name}}</td>
+            <td>{{project.client}}</td>
+            <td>{{project.start_project|default_if_none:"-"}}</td>
+            <td>{{project.start_work|default_if_none:"-"}}</td>
+            <td>{{project.end_project|default_if_none:"-"}}</td>
+            <td>{{project.parcel|default_if_none:"-"}}</td>
+            <td>R$ {{project.value|default_if_none:"-"|floatformat:2}}</td>
+            <td>{{project.due_date|default_if_none:"-"}}</td>
+              <td>
+                  <div class="update-button"; style="text-align:center">
+                      <a href="{% url 'detail_project' pk=project.pk %}" class="btn btn-success btn-sm">
+                        <i class="bi bi-list"></i>
+                      </a>
+                  </div>
+              </td>
+          </tr>
+          {% endfor %}
+        </table>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

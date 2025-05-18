@@ -1,0 +1,94 @@
+{% extends "base.html"  %}
+{% block  title %}
+EG - Entradas
+{%  endblock %}
+{% block content %}
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+.top-line{
+    display:flex;
+    gap: 16px;
+    }
+</style>
+<div class="top-line">
+<form method="GET" action="{% url 'inflow' %}">
+    <input type="text" name="search" placeholder="Buscar receita...">
+    <button type="submit"; class="btn btn-success btn-sm">Buscar</button>
+</form>
+    <a href="{% url 'new_inflow' %}" class="btn btn-success btn-sm">Nova Receita</a>
+</div>
+<div class="inflow-list">
+  {% if inflows %}
+      {% if request.user_agent.is_mobile %}
+         <table>
+          <tr>
+            <th>Receita</th>
+            <th>Valor</th>
+            <th>Detalhe</th>
+          </tr>
+          {% for inflow in inflows %}
+          <tr>
+            <td>{{inflow.income}}</td>
+            <td>{{inflow.value}}</td>
+              <td>
+                  <div class="update-button"; style="text-align:center">
+                      <a href="{% url 'detail_inflow' pk=inflow.pk %}" class="btn btn-success btn-sm">
+                        <i class="bi bi-list"></i>
+                      </a>
+                  </div>
+              </td>
+          </tr>
+           {% endfor %}
+         </table>
+      {% else  %}
+        <table>
+          <tr>
+            <th>Receita</th>
+            <th>Pago</th>
+            <th>Cliente</th>
+            <th>Projeto</th>
+            <th>Data</th>
+            <th>Método de pagamento</th>
+            <th>Valor</th>
+            <th>Detalhe</th>
+          </tr>
+          {% for inflow in inflows %}
+          <tr>
+            <td>{{inflow.income}}</td>
+            <td style="text-align: center; color: {% if inflow.paid %}green{% else %}red{% endif %};">
+                {% if inflow.paid %} ✔ {% else %} ✖ {% endif %}
+            </td>
+            <td>{{inflow.project.client|default_if_none:"-"}}</td>
+            <td>{{inflow.project|default_if_none:"-"}}</td>
+            <td>{{inflow.due_date}}</td>
+            <td>{{inflow.payment_method}}</td>
+            <td>R$ {{inflow.value|floatformat:2}}</td>
+              <td>
+                  <div class="update-button"; style="text-align:center">
+                      <a href="{% url 'detail_inflow' pk=inflow.pk %}" class="btn btn-success btn-sm">
+                        <i class="bi bi-list"></i>
+                      </a>
+                  </div>
+              </td>
+          </tr>
+          {% endfor %}
+        </table>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

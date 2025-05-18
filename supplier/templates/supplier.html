@@ -1,0 +1,98 @@
+{% extends "base.html"  %}
+{% block  title %}
+EG - Fornecedores
+{%  endblock %}
+{% block content %}
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+.top-line{
+    display:flex;
+    gap: 16px;
+    }
+</style>
+<div class="top-line">
+<form method="GET" action="{% url 'client' %}">
+    <input type="text" name="search" placeholder="Buscar fornecedor...">
+    <button type="submit"; class="btn btn-success btn-sm">Buscar</button>
+</form>
+    <a href="{% url 'new_supplier' %}" class="btn btn-success btn-sm">Novo Fornecedor</a>
+</div>
+<div class="client-list">
+  {% if supplier %}
+      {% if request.user_agent.is_mobile %}
+         <table>
+          <tr>
+            <th>Nome</th>
+            <th>Detalhe</th>
+          </tr>
+          {% for sup in supplier %}
+          <tr>
+            <td>{{sup.name}}</td>
+              <td>
+                  <div class="update-button"; style="text-align:center">
+                      <a href="{% url 'detail_supplier' pk=sup.pk %}" class="btn btn-success btn-sm">
+                        <i class="bi bi-list"></i>
+                      </a>
+                  </div>
+              </td>
+          </tr>
+           {% endfor %}
+         </table>
+      {% else  %}
+        <table>
+          <tr>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Telefone</th>
+            <th>Endereço</th>
+            <th>Bairro</th>
+            <th>Cidade</th>
+            <th>CEP</th>
+            <th>CPF/CNPJ</th>
+            <th>Detalhe</th>
+          </tr>
+          {% for sup in supplier %}
+          <tr>
+            <td>{{sup.name}}</td>
+            <td>{{sup.email}}</td>
+            <td>{{sup.phone}}</td>
+            <td>{{sup.address}}</td>
+            <td>{{sup.neighborhood}}</td>
+            <td>{{sup.city}}</td>
+            <td>{{sup.cep}}</td>
+            {% if sup.cpf %}
+              <td>{{sup.cpf}}</td>
+            {% elif sup.cnpj %}
+              <td>{{sup.cnpj}}</td>
+            {% else %}
+              <td>-</td>
+            {% endif %}
+              <td>
+                  <div class="update-button"; style="text-align:center">
+                      <a href="{% url 'detail_supplier' pk=sup.pk %}" class="btn btn-success btn-sm">
+                        <i class="bi bi-list"></i>
+                      </a>
+                  </div>
+              </td>
+          </tr>
+          {% endfor %}
+        </table>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

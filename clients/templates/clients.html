@@ -1,0 +1,98 @@
+{% extends "base.html"  %}
+{% block  title %}
+EG - Clientes
+{%  endblock %}
+{% block content %}
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+.top-line{
+    display:flex;
+    gap: 16px;
+    }
+</style>
+<div class="top-line">
+<form method="GET" action="{% url 'client' %}">
+    <input type="text" name="search" placeholder="Buscar cliente...">
+    <button type="submit"; class="btn btn-success btn-sm">Buscar</button>
+</form>
+    <a href="{% url 'new_client' %}" class="btn btn-success btn-sm">Novo Cliente</a>
+</div>
+<div class="client-list">
+  {% if clients %}
+      {% if request.user_agent.is_mobile %}
+         <table>
+          <tr>
+            <th>Nome</th>
+            <th>Detalhe</th>
+          </tr>
+          {% for client in clients %}
+          <tr>
+            <td>{{client.name}}</td>
+              <td>
+                  <div class="update-button"; style="text-align:center">
+                      <a href="{% url 'detail_client' pk=client.pk %}" class="btn btn-success btn-sm">
+                        <i class="bi bi-list"></i>
+                      </a>
+                  </div>
+              </td>
+          </tr>
+           {% endfor %}
+         </table>
+      {% else  %}
+        <table>
+          <tr>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Telefone</th>
+            <th>Endereço</th>
+            <th>Bairro</th>
+            <th>Cidade</th>
+            <th>CEP</th>
+            <th>CPF/CNPJ</th>
+            <th>Detalhe</th>
+          </tr>
+          {% for client in clients %}
+          <tr>
+            <td>{{client.name}}</td>
+            <td>{{client.email}}</td>
+            <td>{{client.phone}}</td>
+            <td>{{client.address}}</td>
+            <td>{{client.neighborhood}}</td>
+            <td>{{client.city}}</td>
+            <td>{{client.cep}}</td>
+            {% if client.cpf %}
+              <td>{{client.cpf}}</td>
+            {% elif client.cnpj %}
+              <td>{{client.cnpj}}</td>
+            {% else %}
+              <td>-</td>
+            {% endif %}
+              <td>
+                  <div class="update-button"; style="text-align:center">
+                      <a href="{% url 'detail_client' pk=client.pk %}" class="btn btn-success btn-sm">
+                        <i class="bi bi-list"></i>
+                      </a>
+                  </div>
+              </td>
+          </tr>
+          {% endfor %}
+        </table>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}
