@@ -1,0 +1,94 @@
+{% extends "base.html"  %}
+{% block  title %}
+EG - Saídas
+{%  endblock %}
+{% block content %}
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+.top-line{
+    display:flex;
+    gap: 16px;
+    }
+</style>
+<div class="top-line">
+<form method="GET" action="{% url 'outflow' %}">
+    <input type="text" name="search" placeholder="Buscar Despesa...">
+    <button type="submit"; class="btn btn-success btn-sm">Buscar</button>
+</form>
+    <a href="{% url 'new_outflow' %}" class="btn btn-success btn-sm">Nova Despesa</a>
+</div>
+<div class="Outflow-list">
+  {% if inflows %}
+      {% if request.user_agent.is_mobile %}
+         <table>
+          <tr>
+            <th>Despesa</th>
+            <th>Valor</th>
+            <th>Detalhe</th>
+          </tr>
+          {% for outflow in outflows %}
+          <tr>
+            <td>{{outflow.expense}}</td>
+            <td>{{outflow.value}}</td>
+              <td>
+                  <div class="update-button"; style="text-align:center">
+                      <a href="{% url 'detail_outflow' pk=outflow.pk %}" class="btn btn-success btn-sm">
+                        <i class="bi bi-list"></i>
+                      </a>
+                  </div>
+              </td>
+          </tr>
+           {% endfor %}
+         </table>
+      {% else  %}
+        <table>
+          <tr>
+            <th>Despesa</th>
+            <th>Pago</th>
+            <th>Favorecido</th>
+            <th>Projeto</th>
+            <th>Data</th>
+            <th>Método de pagamento</th>
+            <th>Valor</th>
+            <th>Detalhe</th>
+          </tr>
+          {% for outflow in outflows %}
+          <tr>
+            <td>{{outflow.expense}}</td>
+            <td style="text-align: center; color: {% if inflow.paid %}green{% else %}red{% endif %};">
+                {% if outflow.paid %} ✔ {% else %} ✖ {% endif %}
+            </td>
+            <td>{{outflow.favored|default_if_none:"-"}}</td>
+            <td>{{outflow.project|default_if_none:"-"}}</td>
+            <td>{{outflow.date}}</td>
+            <td>{{outflow.payment_method}}</td>
+            <td>R$ {{outflow.value|floatformat:2}}</td>
+              <td>
+                  <div class="update-button"; style="text-align:center">
+                      <a href="{% url 'detail_outflow' pk=outflow.pk %}" class="btn btn-success btn-sm">
+                        <i class="bi bi-list"></i>
+                      </a>
+                  </div>
+              </td>
+          </tr>
+          {% endfor %}
+        </table>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

@@ -10,8 +10,8 @@
   <style>
     body {
         font-family: 'Open Sans', sans-serif;
-        color: light-dark(#333b3c, #efefec);
-        background-color: light-dark(#efedea, #223a2c);
+        color: #333b3c;
+        background-color: #efedea;
         margin: 0;
         padding: 0;
     }
@@ -22,14 +22,8 @@
         text-align: center;
     }
 
-    footer {
-        background-color: #ccc;
-        color: #333;
-        padding: 20px;
-        text-align: center;
-    }
-
-    nav {
+    /* Estilos para a versão DESKTOP */
+    .desktop-nav {
         background-color: #00B36A;
         color: #fff;
         height: 50px;
@@ -38,18 +32,18 @@
         align-items: center;
     }
 
-    nav ul {
+    .desktop-nav ul {
         list-style: none;
         margin: 0;
         padding: 0;
         display: flex;
     }
 
-    nav ul li {
+    .desktop-nav ul li {
         margin: 0 10px;
     }
 
-    nav ul li a {
+    .desktop-nav ul li a {
         color: #fff;
         text-decoration: none;
         font-size: 16px;
@@ -57,50 +51,100 @@
         transition: all 0.3s ease;
     }
 
-    nav ul li a:hover {
+    .desktop-nav ul li a:hover {
         background-color: #2E8B57;
     }
 
-    nav ul li.active a {
-        background-color: #666;
+    /* Estilos para a versão MOBILE */
+    .mobile-navbar {
+        background-color: #00B36A;
     }
 
-    nav ul li.active a:hover {
-        background-color: #999;
+    .mobile-navbar .navbar-brand img {
+        height: 28px;
     }
 
+    .mobile-navbar .nav-link {
+        color: #fff !important;
+        padding: 10px 15px;
+        transition: all 0.3s ease;
+        display: block;
+    }
 
+    .mobile-navbar .nav-link:hover {
+        background-color: #2E8B57;
+    }
+
+    .mobile-navbar .navbar-toggler {
+        border-color: rgba(255,255,255,0.5);
+    }
+
+    .mobile-navbar .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+
+    .mobile-navbar .navbar-collapse {
+        background-color: #00B36A;
+    }
+
+    footer {
+        background-color: #ccc;
+        color: #333;
+        padding: 20px;
+        text-align: center;
+    }
   </style>
 </head>
 {% load user_agents %}
 {% load static %}
 <body>
   <header>
-    <nav>
-      <ul>
-        <img type="image" src="{% static 'nav/eg-logo-branco-transp.png' %}" width="115" height="28" unselectable="on">
-        {% comment %}
-        {% if user.is_authenticated %}
-          <li>Olá, {{ user.username }}</li>
-          <li><a href="{% url 'new_car' %}">Cadastrar Carro</a></li>
-        {% endif %}
-        {% if not user.is_authenticated %}
-          <li><a href="{% url 'register' %}">Cadastre-se</a></li>
-          <li><a href="{% url 'login' %}">Login</a></li>
-        {% endif %}
-        {% endcomment %}
-
-        <li><a href="{% url 'client' %}">Clientes</a></li>
-        <li><a href="{% url 'project' %}">Projetos</a></li>
-        <li><a href="{% url 'inflow' %}">Entradas</a></li>
-        <li><a href="{% url 'supplier' %}">Fornecedores</a></li>
-        {% comment %}
-        {% if user.is_authenticated %}
-          <li><a href="{% url 'logout' %}">Sair</a></li>
-        {% endif %}
-        {% endcomment %}
-      </ul>
-    </nav>
+    {% if request.user_agent.is_mobile %}
+      <!-- VERSÃO MOBILE COM COLLAPSE -->
+      <nav class="navbar navbar-expand-lg mobile-navbar">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="{% static 'nav/eg-logo-branco-transp.png' %}" alt="Logo" width="115" unselectable="on">
+          </a>
+          
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          
+          <div class="collapse navbar-collapse" id="mobileMenu">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'client' %}">Clientes</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'project' %}">Projetos</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'inflow' %}">Entradas</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'outflow' %}">Saídas</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'supplier' %}">Fornecedores</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    {% else %}
+      <!-- VERSÃO DESKTOP ORIGINAL -->
+      <nav class="desktop-nav">
+        <ul>
+          <img type="image" src="{% static 'nav/eg-logo-branco-transp.png' %}" width="115" height="28" unselectable="on">
+          <li><a href="{% url 'client' %}">Clientes</a></li>
+          <li><a href="{% url 'project' %}">Projetos</a></li>
+          <li><a href="{% url 'inflow' %}">Entradas</a></li>
+          <li><a href="{% url 'outflow' %}">Saídas</a></li>
+          <li><a href="{% url 'supplier' %}">Fornecedores</a></li>
+        </ul>
+      </nav>
+    {% endif %}
   </header>
 
   <main>
