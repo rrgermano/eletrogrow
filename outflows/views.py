@@ -61,3 +61,4 @@ class CreateOutflow(View):
                         outflow.type.add(OutflowTypeChoice.objects.get(pk=int(type)))
         form = FormOutflow()
         return render(request, 'new_outflow.html', {'form': form})
+

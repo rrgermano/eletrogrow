@@ -1,0 +1,12 @@
+[Unit]
+Description=uWSGI instance to serve eletrogrow
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/var/www/eletrogrow
+ExecStart=/var/www/eletrogrow/venv/bin/uwsgi --ini /var/www/eletrogrow/eletrogrow_uwsgi.ini
+
+[Install]
+WantedBy=multi-user.target
