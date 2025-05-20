@@ -80,7 +80,7 @@ tr:nth-child(even) {
             <td>R$ {{outflow.value|floatformat:2}}</td>
               <td>
                   <div class="update-button"; style="text-align:center">
-                      <a href="{% url 'new_outflow' pk=outflow.pk %}" class="btn btn-success btn-sm">
+                      <a href="{% url 'detail_outflow' pk=outflow.pk %}" class="btn btn-success btn-sm">
                         <i class="bi bi-list"></i>
                       </a>
                   </div>

@@ -8,8 +8,9 @@ from projects.models import ModelProject
 import datetime
 from dateutil.relativedelta import relativedelta
 import threading
+from time import sleep
 
-# Create your views here.
+
 class ListOutflow(ListView):
     model = ModelOutflow
     template_name = 'outflow.html'
@@ -69,3 +70,4 @@ class CreateOutflow(View):
             if 'type' in request_data.keys():
                 for type in request_data['type']:
                     outflow.type.add(OutflowTypeChoice.objects.get(pk=int(type)))
+            sleep(1)
