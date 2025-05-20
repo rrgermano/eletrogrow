@@ -33,7 +33,7 @@ tr:nth-child(even) {
     <a href="{% url 'new_outflow' %}" class="btn btn-success btn-sm">Nova Despesa</a>
 </div>
 <div class="Outflow-list">
-  {% if inflows %}
+  {% if outflows %}
       {% if request.user_agent.is_mobile %}
          <table>
           <tr>
@@ -47,7 +47,7 @@ tr:nth-child(even) {
             <td>{{outflow.value}}</td>
               <td>
                   <div class="update-button"; style="text-align:center">
-                      <a href="{% url 'detail_outflow' pk=outflow.pk %}" class="btn btn-success btn-sm">
+                      <a href="{% url 'new_outflow' pk=outflow.pk %}" class="btn btn-success btn-sm">
                         <i class="bi bi-list"></i>
                       </a>
                   </div>
@@ -80,7 +80,7 @@ tr:nth-child(even) {
             <td>R$ {{outflow.value|floatformat:2}}</td>
               <td>
                   <div class="update-button"; style="text-align:center">
-                      <a href="{% url 'detail_outflow' pk=outflow.pk %}" class="btn btn-success btn-sm">
+                      <a href="{% url 'new_outflow' pk=outflow.pk %}" class="btn btn-success btn-sm">
                         <i class="bi bi-list"></i>
                       </a>
                   </div>
