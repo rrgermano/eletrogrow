@@ -70,7 +70,7 @@ tr:nth-child(even) {
           {% for outflow in outflows %}
           <tr>
             <td>{{outflow.expense}}</td>
-            <td style="text-align: center; color: {% if inflow.paid %}green{% else %}red{% endif %};">
+            <td style="text-align: center; color: {% if outflow.paid %}green{% else %}red{% endif %};">
                 {% if outflow.paid %} ✔ {% else %} ✖ {% endif %}
             </td>
             <td>{{outflow.favored|default_if_none:"-"}}</td>

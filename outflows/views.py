@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import View
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView, DeleteView, UpdateView
 from .forms import FormOutflow
 from .models import ModelOutflow, ModelCreditOutflow, OutflowTypeChoice
 from supplier.models import ModelSupplier
@@ -24,6 +24,7 @@ class ListOutflow(ListView):
         return outflows
 
 class CreateOutflow(View):
+
     def get(self, request):
         form = FormOutflow()
         return render(request, 'new_outflow.html', {'form': form})
@@ -31,43 +32,57 @@ class CreateOutflow(View):
     def post(self, request):
         form_posted = FormOutflow(request.POST)
         if form_posted.is_valid():
-            if request.POST['payment_method'] == 'CRED':
+            cleaned_data = form_posted.cleaned_data
+            print(cleaned_data)
+            if cleaned_data['payment_method'] == 'CRED':
                 threading.Thread(
                     target=self.__credit_parcel_creation,
-                    args=(request.POST.copy(),)
+                    args=(cleaned_data.copy(),)
                 ).start()
                 
             else:
                 outflow = ModelOutflow(
-                    expense=request.POST['expense'],
-                    favored=ModelSupplier.objects.get(pk=int(request.POST['favored'])) if request.POST['favored'] else None,
-                    paid=bool(request.POST['paid']) if 'paid' in request.POST.keys() else False,
-                    date=request.POST['date'],
-                    payment_method=request.POST['payment_method'],
-                    project=ModelProject.objects.get(pk=int(request.POST['project'])) if request.POST['project'] else None,
-                    value=float(request.POST['value'])
+                    expense=cleaned_data['expense'],
+                    favored=cleaned_data['favored'],
+                    paid=cleaned_data['paid'],
+                    date=cleaned_data['date'].strftime('%Y-%m-%d'),
+                    payment_method=cleaned_data['payment_method'],
+                    project=cleaned_data['project'],
+                    value=cleaned_data['value'],
                 )
                 outflow.save()
-                if 'type' in request.POST.keys():
-                    for type in request.POST['type']:
-                        outflow.type.add(OutflowTypeChoice.objects.get(pk=int(type)))
+                outflow.type.set(cleaned_data['type'])
+                
         form = FormOutflow()
-        return render(request, 'outflow.html', {'form': form})
+        return render(request, 'outflow.html', {'outflows': ModelOutflow.objects.all()})
     
-    def __credit_parcel_creation(self, request_data):
-        parcel_value = float(request_data['value'])/int(request_data['parcel'])
-        for parcel in range(int(request_data['parcel'])):
-            date = datetime.datetime.strptime(request_data['date'], '%Y-%m-%d')
+    def __credit_parcel_creation(self, form):
+        parcel_value = form['value']/form['parcel']
+        for parcel in range(form['parcel']):
+            date = form['date']
             date = (date + relativedelta(months=parcel)).strftime('%Y-%m-%d')
             outflow = ModelCreditOutflow(
-                expense=f"{request_data['expense']} - {parcel+1}/{int(request_data['parcel'])}" if int(request_data['parcel'])>1 else request_data['expense'],
-                favored=ModelSupplier.objects.get(pk=int(request_data['favored'])) if request_data['favored'] else None,
+                expense=f"{form['expense']} - {parcel+1}/{form['parcel']}" if form['parcel']>1 else form['expense'],
+                favored=form['favored'],
                 date=date,
-                project=ModelProject.objects.get(pk=int(request_data['project'])) if request_data['project'] else None,
-                value=parcel_value
+                project=form['project'],
+                value=round(parcel_value, 2)
             )
             outflow.save()
-            if 'type' in request_data.keys():
-                for type in request_data['type']:
-                    outflow.type.add(OutflowTypeChoice.objects.get(pk=int(type)))
+            outflow.type.set(form['type'])
             sleep(1)
+
+class DetailOutflow(DetailView):
+    model = ModelOutflow
+    template_name = "detail_outflow.html"
+
+class DeleteOutflow(DeleteView):
+    model = ModelOutflow
+    template_name = 'delete_outflow.html'
+    success_url = '/outflow/'
+
+class UpdateOutflow(UpdateView):
+    model = ModelOutflow
+    form_class = FormOutflow
+    template_name = 'update_outflow.html'
+    success_url = '/outflow/'

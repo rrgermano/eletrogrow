@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block  title %}
-EG - Deletar Receita
+EG - Deletar Despesa
 {%  endblock %}
 {% block content %}
   <style>
@@ -43,15 +43,15 @@ EG - Deletar Receita
   </style>
   <div class="card">
     <div class="card-header">
-      <h1 class="card-title">Deletar Receita</h1>
+      <h1 class="card-title">Deletar Despesa</h1>
     </div>
     <div class="card-body">
-      <p>Tem certeza que deseja deletar a receita <strong>{{ object.income }}</strong>?</p>
+      <p>Tem certeza que deseja deletar a despesa <strong>{{ object.expense }}</strong>?</p>
       <form method="post">
         {% csrf_token %}
         <div class="buttons-container">
-          <button type="submit" class="btn btn-danger">Deletar Receita</button>
-          <a href="{% url 'inflow' %}" class="btn btn-success">Cancelar</a>
+          <button type="submit" class="btn btn-danger">Deletar Despesa</button>
+          <a href="{% url 'outflow' %}" class="btn btn-success">Cancelar</a>
         </div>
       </form>
     </div>

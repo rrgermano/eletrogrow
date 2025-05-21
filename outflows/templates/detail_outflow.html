@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block  title %}
-EG - Detalhar Receita
+EG - Detalhar Despesa
 {%  endblock %}
 {% block content %}
   <style>
@@ -41,19 +41,20 @@ EG - Detalhar Receita
     }
   </style>
   <div class="project">
-    <p><strong>Receita:</strong> {{ object.income }}</p>
+    <p><strong>Despesa:</strong> {{ object.expense }}</p>
     <p><strong>Pago:</strong> <span style="color: {% if object.paid %}green{% else %}red{% endif %};">
                                 {% if object.paid %} ✔ {% else %} ✖ {% endif %}
                               </span>
     </p>
-    <p><strong>Cliente:</strong> {{ object.project.client|default_if_none:"-" }}</p>
+    <p><strong>Favorecido:</strong> {{ object.favored|default_if_none:"-" }}</p>
     <p><strong>Projeto:</strong> {{ object.project|default_if_none:"-"}}</p>
-    <p><strong>Data de vencimento:</strong> {{ object.due_date }}</p>
+    <p><strong>Tipo:</strong> {{ object.type.all|join:", "|default_if_none:"-" }}</p>
+    <p><strong>Data:</strong> {{ object.date }}</p>
     <p><strong>Método de pagamento:</strong> {{ object.payment_method }}</p>
     <p><strong>Valor:</strong> R$ {{ object.value|floatformat:2 }}</p>
   </div>
     <div class="buttons-container">
-      <a href="{% url 'update_inflow' pk=object.pk %}" class="btn btn-success">Editar</a>
-      <a href="{% url 'delete_inflow' pk=object.pk %}" class="btn btn-danger">Deletar</a>
+      <a href="{% url 'update_outflow' pk=object.pk %}" class="btn btn-success">Editar</a>
+      <a href="{% url 'delete_outflow' pk=object.pk %}" class="btn btn-danger">Deletar</a>
     </div>
 {% endblock %}

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block  title %}
-EG - Atualizar Receita
+EG - Atualizar Despesa
 {%  endblock %}
 {% block content %}
 
@@ -103,15 +103,15 @@ EG - Atualizar Receita
   </style>
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <h1>Editar Projeto</h1>
+    <h1>Editar Despesa</h1>
     <table>
       {{ form.as_table }}
     </table>
     <div>
       <div class="buttons-container">
         <input type="submit" value="Salvar Alterações" class="btn btn-success">
-        <a href="{% url 'delete_inflow' pk=object.pk %}" class="btn btn-danger">Deletar Receita</a>
-        <a href="{% url 'inflow' %}" class="btn btn-success">Cancelar</a>
+        <a href="{% url 'delete_outflow' pk=object.pk %}" class="btn btn-danger">Deletar Despesa</a>
+        <a href="{% url 'outflow' %}" class="btn btn-success">Cancelar</a>
       </div>
     </div>
   </form>
