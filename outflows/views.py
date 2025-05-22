@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView
-from .forms import FormOutflow
+from .forms import FormOutflow, FormUpdateOutflow
 from .models import ModelOutflow, ModelCreditOutflow, OutflowTypeChoice
 from supplier.models import ModelSupplier
 from projects.models import ModelProject
@@ -83,9 +83,35 @@ class DeleteOutflow(DeleteView):
 
 class UpdateOutflow(UpdateView):
     model = ModelOutflow
-    form_class = FormOutflow
+    form_class = FormUpdateOutflow
     template_name = 'update_outflow.html'
     success_url = '/outflow/'
+
+    def get_form_class(self):
+        # Criar uma classe temporária que herda do seu Form
+        original_form = super().get_form_class()
+        
+        class TempModelForm(original_form):
+            def save(self, commit=True):
+                # Pegar o objeto da view
+                obj = self.instance if hasattr(self, 'instance') else None
+                if obj:
+                    for field_name in self.cleaned_data:
+                        if hasattr(obj, field_name) and field_name != 'type':
+                            setattr(obj, field_name, self.cleaned_data[field_name])
+                        elif hasattr(obj, field_name) and field_name == 'type':
+                            getattr(obj, field_name).set(self.cleaned_data[field_name])
+                    if commit:
+                        obj.save()
+                    return obj
+                return None
+        
+        return TempModelForm
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = self.get_object()  # Passa o objeto para o form
+        return kwargs
 
 class ListCreditOutflow(ListView):
     model = ModelCreditOutflow
@@ -110,6 +136,32 @@ class DeleteCreditOutflow(DeleteView):
 
 class UpdateCreditOutflow(UpdateView):
     model = ModelCreditOutflow
-    form_class = FormOutflow
+    form_class = FormUpdateOutflow
     template_name = 'update_outflow.html'
     success_url = '/outflow/credit/'
+
+    def get_form_class(self):
+        # Criar uma classe temporária que herda do seu Form
+        original_form = super().get_form_class()
+        
+        class TempModelForm(original_form):
+            def save(self, commit=True):
+                # Pegar o objeto da view
+                obj = self.instance if hasattr(self, 'instance') else None
+                if obj:
+                    for field_name in self.cleaned_data:
+                        if hasattr(obj, field_name) and field_name != 'type':
+                            setattr(obj, field_name, self.cleaned_data[field_name])
+                        elif hasattr(obj, field_name) and field_name == 'type':
+                            getattr(obj, field_name).set(self.cleaned_data[field_name])
+                    if commit:
+                        obj.save()
+                    return obj
+                return None
+        
+        return TempModelForm
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = self.get_object()  # Passa o objeto para o form
+        return kwargs

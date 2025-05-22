@@ -66,17 +66,17 @@ tr:nth-child(even) {
         <table>
           <tr>
             <th>Despesa</th>
-            {% if outflow|has_attr:"paid" %}
+            {% if outflows|has_field:"paid" %}
               <th>Pago</th>
             {% endif %}
             <th>Favorecido</th>
             <th>Projeto</th>
             <th>Data</th>
-            {% if outflow|has_attr:"payment_method" %}
+            {% if outflows|has_field:"payment_method" %}
               <th>Método de pagamento</th>
             {% endif %}
             <th>Valor</th>
-            {% if outflow|has_attr:"closing" %}
+            {% if outflows|has_field:"closing" %}
               <th>Fechamento</th>
             {% endif %}
             <th>Detalhe</th>
