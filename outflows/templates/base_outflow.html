@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="outflow-container">
+    <!-- Cabeçalho com botões que desativam quando selecionados -->
+    <div class="top-line" style="justify-content: center; margin-bottom: 20px;">
+        {% url 'outflow' as debit_url %}
+        {% url 'outflow_credit' as credit_url %}
+        
+        <a href="{{ debit_url }}" 
+           class="btn btn-sm {% if request.path == debit_url %}btn-outline-secondary active-tab disabled{% else %}btn-success{% endif %}" 
+           style="margin-right: 10px;"
+           {% if request.path == debit_url %}aria-disabled="true"{% endif %}>
+            Débitos
+        </a>
+        
+        <a href="{{ credit_url }}" 
+           class="btn btn-sm {% if request.path == credit_url %}btn-outline-secondary active-tab disabled{% else %}btn-success{% endif %}"
+           {% if request.path == credit_url %}aria-disabled="true"{% endif %}>
+            Crédito
+        </a>
+    </div>
+
+    <!-- Conteúdo específico de cada página -->
+    {% block outflow_content %}
+    {% endblock %}
+</div>
+
+<style>
+    /* Estilo personalizado para a aba ativa */
+    .active-tab {
+        background-color: #e9ecef !important;
+        border-color: #adb5bd !important;
+        color: #28a745 !important;
+        font-weight: 500;
+        cursor: default;
+    }
+    
+    /* Estilo para links desativados */
+    a.disabled {
+        pointer-events: none;
+        text-decoration: none;
+    }
+    
+    /* Manter hover consistente */
+    .active-tab:hover {
+        background-color: #e9ecef !important; /* Mantém a mesma cor do estado normal */
+        color: #28a745 !important;
+    }
+</style>
+{% endblock %}

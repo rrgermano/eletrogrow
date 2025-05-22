@@ -1,43 +1,36 @@
-{% extends "base_outflow.html" %}
+{% extends "base_outflow.html"  %}
 {% load tags %}
-
-{% block title %}EG - Saídas{% endblock %}
-
-{% block outflow_content %}
+{% block  title %}
+EG - Saídas
+{%  endblock %}
+{% block content %}
 <style>
-    /* Seu CSS original do outflow aqui */
-    table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-    }
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
 
-    td, th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-    }
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
 
-    tr:nth-child(even) {
-        background-color: #dddddd;
-    }
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
 
-    .top-line{
-        display:flex;
-        gap: 16px;
-        margin-bottom: 20px;
+.top-line{
+    display:flex;
+    gap: 16px;
     }
 </style>
-
 <div class="top-line">
-  {% if request.path == "/outflow/" %}
-    <form method="GET" action="{% url 'outflow' %}">
-  {% else %}
-    <form method="GET" action="{% url 'outflow_credit' %}">
-  {% endif %}
-        <input type="text" name="search" placeholder="Buscar Despesa...">
-        <button type="submit" class="btn btn-success btn-sm">Buscar</button>
-    </form>
+<form method="GET" action="{% url 'outflow' %}">
+    <input type="text" name="search" placeholder="Buscar Despesa...">
+    <button type="submit"; class="btn btn-success btn-sm">Buscar</button>
+</form>
     <a href="{% url 'new_outflow' %}" class="btn btn-success btn-sm">Nova Despesa</a>
 </div>
 <div class="Outflow-list">
