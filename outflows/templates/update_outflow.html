@@ -110,8 +110,13 @@ EG - Atualizar Despesa
     <div>
       <div class="buttons-container">
         <input type="submit" value="Salvar Alterações" class="btn btn-success">
-        <a href="{% url 'delete_outflow' pk=object.pk %}" class="btn btn-danger">Deletar Despesa</a>
-        <a href="{% url 'outflow' %}" class="btn btn-success">Cancelar</a>
+        {% if object.model_name == "modeloutflow" %}
+          <a href="{% url 'delete_outflow' pk=object.pk %}" class="btn btn-danger">Deletar Despesa</a>
+          <a href="{% url 'outflow' %}" class="btn btn-success">Cancelar</a>
+        {% else %}
+          <a href="{% url 'delete_credit_outflow' pk=object.pk %}" class="btn btn-danger">Deletar Despesa</a>
+          <a href="{% url 'outflow_credit' %}" class="btn btn-success">Cancelar</a>
+        {% endif %}
       </div>
     </div>
   </form>

@@ -86,3 +86,30 @@ class UpdateOutflow(UpdateView):
     form_class = FormOutflow
     template_name = 'update_outflow.html'
     success_url = '/outflow/'
+
+class ListCreditOutflow(ListView):
+    model = ModelCreditOutflow
+    template_name = 'outflow.html'
+    context_object_name = 'outflows'
+
+    def get_queryset(self):
+        outflows = super().get_queryset().order_by('date', )
+        search = self.request.GET.get('search')
+        if search:
+            outflows = outflows.filter(expense__icontains=search)
+        return outflows
+
+class DetailCreditOutflow(DetailView):
+    model = ModelCreditOutflow
+    template_name = "detail_outflow.html"
+
+class DeleteCreditOutflow(DeleteView):
+    model = ModelCreditOutflow
+    template_name = 'delete_outflow.html'
+    success_url = '/outflow/credit/'
+
+class UpdateCreditOutflow(UpdateView):
+    model = ModelCreditOutflow
+    form_class = FormOutflow
+    template_name = 'update_outflow.html'
+    success_url = '/outflow/credit/'

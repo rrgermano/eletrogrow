@@ -4,12 +4,20 @@ from .views import (ListOutflow,
                     UpdateOutflow,
                     DetailOutflow,
                     DeleteOutflow,
+                    DetailCreditOutflow,
+                    ListCreditOutflow,
+                    UpdateCreditOutflow,
+                    DeleteCreditOutflow,
                     )
 
 urlpatterns = [
     path('', ListOutflow.as_view(), name='outflow'),
+    path('credit/', ListCreditOutflow.as_view(), name='outflow_credit'),
     path('new/', CreateOutflow.as_view(), name='new_outflow'),
     path('update/<int:pk>/', UpdateOutflow.as_view(), name='update_outflow'),
-    path('detail/<int:pk>', DetailOutflow.as_view(), name='detail_outflow'),
-    path('delete/<int:pk>', DeleteOutflow.as_view(), name='delete_outflow'),
+    path('credit/update/<int:pk>/', UpdateCreditOutflow.as_view(), name='update_credit_outflow'),
+    path('detail/<int:pk>/', DetailOutflow.as_view(), name='detail_outflow'),
+    path('credit/detail/<int:pk>/', DetailCreditOutflow.as_view(), name='detail_credit_outflow'),
+    path('delete/<int:pk>/', DeleteOutflow.as_view(), name='delete_outflow'),
+    path('credit/delete/<int:pk>/', DeleteCreditOutflow.as_view(), name='delete_credit_outflow'),
 ]

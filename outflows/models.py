@@ -29,7 +29,10 @@ class ModelOutflow(models.Model):
 
     def __str__(self):
         return self.expense
-        
+    
+    @property
+    def model_name(self):
+        return self._meta.model_name
 
 class ModelCreditOutflow(models.Model):
     expense = models.CharField(max_length=50, verbose_name='Despesa')
@@ -43,3 +46,6 @@ class ModelCreditOutflow(models.Model):
 
     def __str__(self):
         return self.expense
+    @property
+    def model_name(self):
+        return self._meta.model_name

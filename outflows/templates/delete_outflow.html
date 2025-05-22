@@ -51,7 +51,11 @@ EG - Deletar Despesa
         {% csrf_token %}
         <div class="buttons-container">
           <button type="submit" class="btn btn-danger">Deletar Despesa</button>
-          <a href="{% url 'outflow' %}" class="btn btn-success">Cancelar</a>
+          {% if object.model_name == "modeloutflow" %}
+            <a href="{% url 'outflow' %}" class="btn btn-success">Cancelar</a>
+          {% else %}
+            <a href="{% url 'outflow_credit' %}" class="btn btn-success">Cancelar</a>
+          {% endif %}
         </div>
       </form>
     </div>

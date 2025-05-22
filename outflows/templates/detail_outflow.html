@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load tags %}
 {% block  title %}
 EG - Detalhar Despesa
 {%  endblock %}
@@ -42,19 +43,36 @@ EG - Detalhar Despesa
   </style>
   <div class="project">
     <p><strong>Despesa:</strong> {{ object.expense }}</p>
-    <p><strong>Pago:</strong> <span style="color: {% if object.paid %}green{% else %}red{% endif %};">
-                                {% if object.paid %} ✔ {% else %} ✖ {% endif %}
-                              </span>
-    </p>
+    {% if object|has_attr:"paid" %}
+      <p><strong>Pago:</strong> <span style="color: {% if object.paid %}green{% else %}red{% endif %};">
+                                  {% if object.paid %} ✔ {% else %} ✖ {% endif %}
+                                </span>
+      </p>
+    {% endif %}
     <p><strong>Favorecido:</strong> {{ object.favored|default_if_none:"-" }}</p>
     <p><strong>Projeto:</strong> {{ object.project|default_if_none:"-"}}</p>
     <p><strong>Tipo:</strong> {{ object.type.all|join:", "|default_if_none:"-" }}</p>
     <p><strong>Data:</strong> {{ object.date }}</p>
-    <p><strong>Método de pagamento:</strong> {{ object.payment_method }}</p>
-    <p><strong>Valor:</strong> R$ {{ object.value|floatformat:2 }}</p>
+    {% if object|has_attr:"payment_method" %}
+      <p><strong>Método de pagamento:</strong> {{ object.payment_method }}</p>
+    {% else %}
+      <p><strong>Método de pagamento:</strong> Cartão de Crédito</p>
+    {% endif %}
+      <p><strong>Valor:</strong> R$ {{ object.value|floatformat:2 }}</p>
+    {% if object|has_attr:"closing" %}
+      <p><strong>Fechamento:</strong> <span style="color: {% if object.closing %}green{% else %}red{% endif %};">
+                                        {% if object.closing %} ✔ {% else %} ✖ {% endif %}
+                                      </span>
+      </p>
+    {% endif %}  
   </div>
     <div class="buttons-container">
-      <a href="{% url 'update_outflow' pk=object.pk %}" class="btn btn-success">Editar</a>
-      <a href="{% url 'delete_outflow' pk=object.pk %}" class="btn btn-danger">Deletar</a>
+      {% if object.model_name == "modeloutflow" %}
+        <a href="{% url 'update_outflow' pk=object.pk %}" class="btn btn-success">Editar</a>
+        <a href="{% url 'delete_outflow' pk=object.pk %}" class="btn btn-danger">Deletar</a>
+      {% else %}
+        <a href="{% url 'update_credit_outflow' pk=object.pk %}" class="btn btn-success">Editar</a>
+        <a href="{% url 'delete_credit_outflow' pk=object.pk %}" class="btn btn-danger">Deletar</a>
+      {% endif %}
     </div>
 {% endblock %}

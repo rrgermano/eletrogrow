@@ -32,12 +32,12 @@ class FormOutflow(forms.Form):
             # Preenche os campos com os dados da instância para UpdateView
             self.fields['expense'].initial = self.instance.expense
             self.fields['favored'].initial = self.instance.favored
-            self.fields['paid'].initial = self.instance.paid
+            self.fields['paid'].initial = self.instance.paid if hasattr(self.instance, 'paid') else None
             self.fields['type'].initial = self.instance.type.all()  # Para ManyToMany
             self.fields['date'].initial = self.instance.date.strftime('%Y-%m-%d')
-            self.fields['payment_method'].initial = self.instance.payment_method
+            self.fields['payment_method'].initial = self.instance.payment_method if hasattr(self.instance, 'payment_method') else 'CRED'
             self.fields['project'].initial = self.instance.project
-            self.fields['parcel'].initial = self.instance.parcel if hasattr(self.instance, 'parcel') else None
+            self.fields['parcel'].initial = self.instance.parcel if hasattr(self.instance, 'parcel') else 1
             self.fields['value'].initial = self.instance.value
         else:
             last_related_outflow = ModelOutflow.objects.order_by('-id').first()

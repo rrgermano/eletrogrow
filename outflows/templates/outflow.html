@@ -1,4 +1,5 @@
 {% extends "base.html"  %}
+{% load tags %}
 {% block  title %}
 EG - Saídas
 {%  endblock %}
@@ -46,11 +47,17 @@ tr:nth-child(even) {
             <td>{{outflow.expense}}</td>
             <td>{{outflow.value}}</td>
               <td>
-                  <div class="update-button"; style="text-align:center">
-                      <a href="{% url 'new_outflow' pk=outflow.pk %}" class="btn btn-success btn-sm">
-                        <i class="bi bi-list"></i>
-                      </a>
-                  </div>
+                <div class="update-button"; style="text-align:center">
+                  {% if outflow.model_name == "modeloutflow" %}
+                    <a href="{% url 'detail_outflow' pk=outflow.pk %}" class="btn btn-success btn-sm">
+                      <i class="bi bi-list"></i>
+                    </a>
+                  {% else %}
+                    <a href="{% url 'detail_credit_outflow' pk=outflow.pk %}" class="btn btn-success btn-sm">
+                      <i class="bi bi-list"></i>
+                    </a>
+                  {% endif %}
+                </div>
               </td>
           </tr>
            {% endfor %}
@@ -59,31 +66,53 @@ tr:nth-child(even) {
         <table>
           <tr>
             <th>Despesa</th>
-            <th>Pago</th>
+            {% if outflow|has_attr:"paid" %}
+              <th>Pago</th>
+            {% endif %}
             <th>Favorecido</th>
             <th>Projeto</th>
             <th>Data</th>
-            <th>Método de pagamento</th>
+            {% if outflow|has_attr:"payment_method" %}
+              <th>Método de pagamento</th>
+            {% endif %}
             <th>Valor</th>
+            {% if outflow|has_attr:"closing" %}
+              <th>Fechamento</th>
+            {% endif %}
             <th>Detalhe</th>
           </tr>
           {% for outflow in outflows %}
           <tr>
             <td>{{outflow.expense}}</td>
-            <td style="text-align: center; color: {% if outflow.paid %}green{% else %}red{% endif %};">
-                {% if outflow.paid %} ✔ {% else %} ✖ {% endif %}
-            </td>
+            {% if outflow|has_attr:"paid" %}
+              <td style="text-align: center; color: {% if outflow.paid %}green{% else %}red{% endif %};">
+                  {% if outflow.paid %} ✔ {% else %} ✖ {% endif %}
+              </td>
+            {% endif %}
             <td>{{outflow.favored|default_if_none:"-"}}</td>
             <td>{{outflow.project|default_if_none:"-"}}</td>
             <td>{{outflow.date}}</td>
-            <td>{{outflow.payment_method}}</td>
+            {% if outflow|has_attr:"payment_method" %}
+              <td>{{outflow.payment_method}}</td>
+            {% endif %}
             <td>R$ {{outflow.value|floatformat:2}}</td>
+            {% if outflow|has_attr:"closing" %}
+            <td style="text-align: center; color: {% if outflow.closing %}green{% else %}red{% endif %};">
+              {% if outflow.closing %} ✔ {% else %} ✖ {% endif %}
+            </td>
+            {% endif %}
               <td>
-                  <div class="update-button"; style="text-align:center">
-                      <a href="{% url 'detail_outflow' pk=outflow.pk %}" class="btn btn-success btn-sm">
-                        <i class="bi bi-list"></i>
-                      </a>
-                  </div>
+                <div class="update-button"; style="text-align:center">
+                  {% if outflow.model_name == "modeloutflow" %}
+                    <a href="{% url 'detail_outflow' pk=outflow.pk %}" class="btn btn-success btn-sm">
+                      <i class="bi bi-list"></i>
+                    </a>
+                  {% else %}
+                    <a href="{% url 'detail_credit_outflow' pk=outflow.pk %}" class="btn btn-success btn-sm">
+                      <i class="bi bi-list"></i>
+                    </a>
+                  {% endif %}
+                </div>
               </td>
           </tr>
           {% endfor %}
