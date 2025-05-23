@@ -44,7 +44,7 @@ tr:nth-child(even) {
           {% for inflow in inflows %}
           <tr>
             <td>{{inflow.income}}</td>
-            <td>{{inflow.value}}</td>
+            <td>R$ {{inflow.value|floatformat:2}}</td>
               <td>
                   <div class="update-button"; style="text-align:center">
                       <a href="{% url 'detail_inflow' pk=inflow.pk %}" class="btn btn-success btn-sm">

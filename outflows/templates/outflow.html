@@ -52,7 +52,7 @@
           {% for outflow in outflows %}
           <tr>
             <td>{{outflow.expense}}</td>
-            <td>{{outflow.value}}</td>
+            <td>R$ {{outflow.value|floatformat:2}}</td>
               <td>
                 <div class="update-button"; style="text-align:center">
                   {% if outflow.model_name == "modeloutflow" %}

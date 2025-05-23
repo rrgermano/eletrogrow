@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from django.views.generic import ListView, DetailView, DeleteView, UpdateView
-from .forms import FormOutflow, FormUpdateOutflow
+from django.views.generic import ListView, DetailView, DeleteView, UpdateView, CreateView
+from .forms import FormOutflow, FormUpdateOutflow, FormOutflowTypeChoice
 from .models import ModelOutflow, ModelCreditOutflow, OutflowTypeChoice
 from dateutil.relativedelta import relativedelta
 import threading
@@ -163,3 +163,9 @@ class UpdateCreditOutflow(LoginRequiredMixin, UpdateView):
         kwargs = super().get_form_kwargs()
         kwargs['instance'] = self.get_object()  # Passa o objeto para o form
         return kwargs
+
+class CreateOutflowTypeChoice(LoginRequiredMixin, CreateView):
+    model = OutflowTypeChoice
+    form_class = FormOutflowTypeChoice
+    template_name = 'new_outflow.html'
+    success_url = '/outflow/'

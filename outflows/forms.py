@@ -78,3 +78,7 @@ class FormUpdateOutflow(forms.Form):
         if types:
             return list(types)
         return []
+
+class FormOutflowTypeChoice(forms.ModelForm):
+    model = OutflowTypeChoice
+    fields = '__all__'
