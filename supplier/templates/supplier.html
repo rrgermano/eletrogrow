@@ -42,7 +42,7 @@ tr:nth-child(even) {
           </tr>
           {% for sup in supplier %}
           <tr>
-            <td>{{sup.name}}</td>
+            <td>{{sup.name|default_if_none:"-"}}</td>
               <td>
                   <div class="update-button"; style="text-align:center">
                       <a href="{% url 'detail_supplier' pk=sup.pk %}" class="btn btn-success btn-sm">
@@ -68,13 +68,13 @@ tr:nth-child(even) {
           </tr>
           {% for sup in supplier %}
           <tr>
-            <td>{{sup.name}}</td>
-            <td>{{sup.email}}</td>
-            <td>{{sup.phone}}</td>
-            <td>{{sup.address}}</td>
-            <td>{{sup.neighborhood}}</td>
-            <td>{{sup.city}}</td>
-            <td>{{sup.cep}}</td>
+            <td>{{sup.name|default_if_none:"-"}}</td>
+            <td>{{sup.email|default_if_none:"-"}}</td>
+            <td>{{sup.phone|default_if_none:"-"}}</td>
+            <td>{{sup.address|default_if_none:"-"}}</td>
+            <td>{{sup.neighborhood|default_if_none:"-"}}</td>
+            <td>{{sup.city|default_if_none:"-"}}</td>
+            <td>{{sup.cep|default_if_none:"-"}}</td>
             {% if sup.cpf %}
               <td>{{sup.cpf}}</td>
             {% elif sup.cnpj %}
