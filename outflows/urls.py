@@ -8,6 +8,7 @@ from .views import (ListOutflow,
                     ListCreditOutflow,
                     UpdateCreditOutflow,
                     DeleteCreditOutflow,
+                    CreateOutflowTypeChoice
                     )
 
 urlpatterns = [
@@ -20,4 +21,5 @@ urlpatterns = [
     path('credit/detail/<int:pk>/', DetailCreditOutflow.as_view(), name='detail_credit_outflow'),
     path('delete/<int:pk>/', DeleteOutflow.as_view(), name='delete_outflow'),
     path('credit/delete/<int:pk>/', DeleteCreditOutflow.as_view(), name='delete_credit_outflow'),
+    path('choices/new/', CreateOutflowTypeChoice.as_view(), name='new_outflow_choice'),
 ]

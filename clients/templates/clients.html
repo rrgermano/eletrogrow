@@ -42,7 +42,7 @@ tr:nth-child(even) {
           </tr>
           {% for client in clients %}
           <tr>
-            <td>{{client.name}}</td>
+            <td>{{client.name|default_if_none:"-"}}</td>
               <td>
                   <div class="update-button"; style="text-align:center">
                       <a href="{% url 'detail_client' pk=client.pk %}" class="btn btn-success btn-sm">
@@ -68,13 +68,13 @@ tr:nth-child(even) {
           </tr>
           {% for client in clients %}
           <tr>
-            <td>{{client.name}}</td>
-            <td>{{client.email}}</td>
-            <td>{{client.phone}}</td>
-            <td>{{client.address}}</td>
-            <td>{{client.neighborhood}}</td>
-            <td>{{client.city}}</td>
-            <td>{{client.cep}}</td>
+            <td>{{client.name|default_if_none:"-"}}</td>
+            <td>{{client.email|default_if_none:"-"}}</td>
+            <td>{{client.phone|default_if_none:"-"}}</td>
+            <td>{{client.address|default_if_none:"-"}}</td>
+            <td>{{client.neighborhood|default_if_none:"-"}}</td>
+            <td>{{client.city|default_if_none:"-"}}</td>
+            <td>{{client.cep|default_if_none:"-"}}</td>
             {% if client.cpf %}
               <td>{{client.cpf}}</td>
             {% elif client.cnpj %}

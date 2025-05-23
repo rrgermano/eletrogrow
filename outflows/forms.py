@@ -80,5 +80,6 @@ class FormUpdateOutflow(forms.Form):
         return []
 
 class FormOutflowTypeChoice(forms.ModelForm):
-    model = OutflowTypeChoice
-    fields = '__all__'
+    class Meta:
+        model=OutflowTypeChoice
+        fields = '__all__'
