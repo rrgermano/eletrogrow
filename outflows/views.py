@@ -1,17 +1,15 @@
 from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView
 from .forms import FormOutflow, FormUpdateOutflow
 from .models import ModelOutflow, ModelCreditOutflow, OutflowTypeChoice
-from supplier.models import ModelSupplier
-from projects.models import ModelProject
-import datetime
 from dateutil.relativedelta import relativedelta
 import threading
 from time import sleep
 
 
-class ListOutflow(ListView):
+class ListOutflow(LoginRequiredMixin, ListView):
     model = ModelOutflow
     template_name = 'outflow.html'
     context_object_name = 'outflows'
@@ -23,7 +21,7 @@ class ListOutflow(ListView):
             outflows = outflows.filter(expense__icontains=search)
         return outflows
 
-class CreateOutflow(View):
+class CreateOutflow(LoginRequiredMixin, View):
 
     def get(self, request):
         form = FormOutflow()
@@ -72,16 +70,16 @@ class CreateOutflow(View):
             outflow.type.set(form['type'])
             sleep(1)
 
-class DetailOutflow(DetailView):
+class DetailOutflow(LoginRequiredMixin, DetailView):
     model = ModelOutflow
     template_name = "detail_outflow.html"
 
-class DeleteOutflow(DeleteView):
+class DeleteOutflow(LoginRequiredMixin, DeleteView):
     model = ModelOutflow
     template_name = 'delete_outflow.html'
     success_url = '/outflow/'
 
-class UpdateOutflow(UpdateView):
+class UpdateOutflow(LoginRequiredMixin, UpdateView):
     model = ModelOutflow
     form_class = FormUpdateOutflow
     template_name = 'update_outflow.html'
@@ -113,7 +111,7 @@ class UpdateOutflow(UpdateView):
         kwargs['instance'] = self.get_object()  # Passa o objeto para o form
         return kwargs
 
-class ListCreditOutflow(ListView):
+class ListCreditOutflow(LoginRequiredMixin, ListView):
     model = ModelCreditOutflow
     template_name = 'outflow.html'
     context_object_name = 'outflows'
@@ -125,16 +123,16 @@ class ListCreditOutflow(ListView):
             outflows = outflows.filter(expense__icontains=search)
         return outflows
 
-class DetailCreditOutflow(DetailView):
+class DetailCreditOutflow(LoginRequiredMixin, DetailView):
     model = ModelCreditOutflow
     template_name = "detail_outflow.html"
 
-class DeleteCreditOutflow(DeleteView):
+class DeleteCreditOutflow(LoginRequiredMixin, DeleteView):
     model = ModelCreditOutflow
     template_name = 'delete_outflow.html'
     success_url = '/outflow/credit/'
 
-class UpdateCreditOutflow(UpdateView):
+class UpdateCreditOutflow(LoginRequiredMixin, UpdateView):
     model = ModelCreditOutflow
     form_class = FormUpdateOutflow
     template_name = 'update_outflow.html'

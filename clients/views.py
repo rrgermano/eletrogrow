@@ -1,10 +1,11 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
 from .models import ModelClient
 from .forms import FormClient
 
 
 
-class ListClient(ListView):
+class ListClient(LoginRequiredMixin, ListView):
     model = ModelClient
     template_name = 'clients.html'
     context_object_name = 'clients'
@@ -15,23 +16,23 @@ class ListClient(ListView):
             clients = clients.filter(name__icontains=search)
         return clients
 
-class CreateClient(CreateView):
+class CreateClient(LoginRequiredMixin, CreateView):
     model = ModelClient
     form_class = FormClient
     template_name = 'new_client.html'
     success_url = '/client/'
 
-class UpdateClient(UpdateView):
+class UpdateClient(LoginRequiredMixin, UpdateView):
     model = ModelClient
     form_class = FormClient
     template_name = 'update_client.html'
     success_url = '/client/'
 
-class DetailClient(DetailView):
+class DetailClient(LoginRequiredMixin, DetailView):
     model = ModelClient
     template_name = 'detail_client.html'
 
-class DeleteClient(DeleteView):
+class DeleteClient(LoginRequiredMixin, DeleteView):
     model = ModelClient
     template_name = 'delete_client.html'
     success_url = '/client/'

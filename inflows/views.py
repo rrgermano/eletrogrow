@@ -1,9 +1,10 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
 from .models import ModelInflow
 from .forms import FormInflow
 
-# Create your views here.
-class ListInflow(ListView):
+
+class ListInflow(LoginRequiredMixin, ListView):
     model = ModelInflow
     template_name = 'inflow.html'
     context_object_name = 'inflows'
@@ -14,23 +15,23 @@ class ListInflow(ListView):
             inflows = inflows.filter(income__icontains=search)
         return inflows
 
-class CreateInflow(CreateView):
+class CreateInflow(LoginRequiredMixin, CreateView):
     model = ModelInflow
     form_class = FormInflow
     template_name = 'new_inflow.html'
     success_url = '/inflow/'
 
-class UpdateInflow(UpdateView):
+class UpdateInflow(LoginRequiredMixin, UpdateView):
     model = ModelInflow
     form_class = FormInflow
     template_name = 'update_inflow.html'
     success_url = '/inflow/'
 
-class DetailInflow(DetailView):
+class DetailInflow(LoginRequiredMixin, DetailView):
     model = ModelInflow
     template_name = 'detail_inflow.html'
 
-class DeleteInflow(DeleteView):
+class DeleteInflow(LoginRequiredMixin, DeleteView):
     model = ModelInflow
     template_name = 'delete_inflow.html'
     success_url = '/inflow/'

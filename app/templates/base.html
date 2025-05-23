@@ -93,12 +93,36 @@
         padding: 20px;
         text-align: center;
     }
+
+
+    .mobile-navbar .logout-item {
+        width: 100%;
+        text-align: center;
+    }
+
+    .mobile-navbar .logout-item .nav-link {
+        display: inline-block;
+        text-align: center;
+        width: auto;
+        padding: 10px 20px;
+    }
+
+    .mobile-navbar .logout-item form {
+        display: inline-block;
+    }
+
+    .mobile-navbar .logout-item button {
+        padding: 0;
+        border: none;
+        background: none;
+    }
   </style>
 </head>
 {% load user_agents %}
 {% load static %}
 <body>
   <header class="main-header">
+    {% if user.is_authenticated %}
     {% if request.user_agent.is_mobile %}
       <!-- VERSÃO MOBILE COM COLLAPSE -->
       <nav class="navbar navbar-expand-lg mobile-navbar">
@@ -128,6 +152,14 @@
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'supplier' %}">Fornecedores</a>
               </li>
+              <li class="nav-item logout-item">
+                <form action="{% url 'logout' %}" method="post" id="logout-form">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-link text-reset nav-link">
+                    <span>Sair</span>
+                  </button>
+                </form>
+              </li>
             </ul>
           </div>
         </div>
@@ -142,8 +174,17 @@
           <li><a href="{% url 'inflow' %}">Entradas</a></li>
           <li><a href="{% url 'outflow' %}">Saídas</a></li>
           <li><a href="{% url 'supplier' %}">Fornecedores</a></li>
+          <li>
+            <form action="{% url 'logout' %}" method="post" id="logout-form">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-link text-decoration-none text-reset nav-link px-0 align-middle">
+              <span class="ms-1 align-middle">Sair</span>
+            </button>
+          </form>
+        </li>
         </ul>
       </nav>
+    {% endif %}
     {% endif %}
   </header>
 
@@ -153,7 +194,7 @@
   </main>
 
   <footer>
-    <p>&copy; Eletrogrow 2024</p>
+    <p>&copy; Eletrogrow 2025</p>
   </footer>
 </body>
 </html>
