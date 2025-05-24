@@ -31,14 +31,29 @@
 
 <div class="top-line">
   {% if request.path == "/outflow/" %}
-    <form method="GET" action="{% url 'outflow' %}">
-  {% else %}
-    <form method="GET" action="{% url 'outflow_credit' %}">
-  {% endif %}
-        <input type="text" name="search" placeholder="Buscar Despesa...">
-        <button type="submit" class="btn btn-success btn-sm">Buscar</button>
+    <form method="GET" action="{% url 'outflow' %}" class="d-flex align-items-center gap-3 flex-wrap">
+{% else %}
+    <form method="GET" action="{% url 'outflow_credit' %}" class="d-flex align-items-center gap-3 flex-wrap">
+{% endif %}
+    <div class="flex-grow-1">
+        <input type="text" name="search" placeholder="Buscar Despesa..." class="form-control">
+    </div>
+
+    <div class="form-floating date-input-wrapper">
+        <input type="date" name="start_date" id="start_date" class="form-control"
+               oninput="handleDateInput(this)" {% if request.GET.start_date %}value="{{ request.GET.start_date }}"{% endif %}>
+        <label for="start_date">À partir</label>
+    </div>
+
+    <div class="form-floating date-input-wrapper">
+        <input type="date" name="end_date" id="end_date" class="form-control"
+               oninput="handleDateInput(this)" {% if request.GET.end_date %}value="{{ request.GET.end_date }}"{% endif %}>
+        <label for="end_date">Até</label>
+    </div>
+
+    <button type="submit" class="btn btn-success">Buscar</button>
     </form>
-    <a href="{% url 'new_outflow' %}" class="btn btn-success btn-sm">Nova Despesa</a>
+    <a href="{% url 'new_outflow' %}" class="btn btn-success btn link-new">Nova Despesa</a>
 </div>
 <div class="Outflow-list">
   {% if outflows %}
@@ -127,4 +142,15 @@
     {% endif %}
   {% endif %}
 </div>
+<script>
+function handleDateInput(input) {
+    const wrapper = input.closest('.date-input-wrapper');
+    wrapper.classList.toggle('has-value', !!input.value);
+}
+
+// Inicialização
+document.querySelectorAll('.date-input-wrapper input[type="date"]').forEach(input => {
+    input.dispatchEvent(new Event('input'));
+});
+</script>
 {% endblock %}

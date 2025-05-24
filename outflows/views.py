@@ -17,8 +17,14 @@ class ListOutflow(LoginRequiredMixin, ListView):
     def get_queryset(self):
         outflows = super().get_queryset().order_by('paid', 'date', )
         search = self.request.GET.get('search')
+        start_date = self.request.GET.get('start_date')
+        end_date = self.request.GET.get('end_date')
         if search:
             outflows = outflows.filter(expense__icontains=search)
+        if start_date:
+            outflows = outflows.filter(date__gte=start_date)
+        if end_date:
+            outflows = outflows.filter(date__lte=end_date)
         return outflows
 
 class CreateOutflow(LoginRequiredMixin, View):
@@ -119,9 +125,17 @@ class ListCreditOutflow(LoginRequiredMixin, ListView):
     def get_queryset(self):
         outflows = super().get_queryset().order_by('date', )
         search = self.request.GET.get('search')
+        start_date = self.request.GET.get('start_date')
+        end_date = self.request.GET.get('end_date')
         if search:
             outflows = outflows.filter(expense__icontains=search)
+        if start_date:
+            outflows = outflows.filter(date__gte=start_date)
+        if end_date:
+            outflows = outflows.filter(date__lte=end_date)
         return outflows
+
+
 
 class DetailCreditOutflow(LoginRequiredMixin, DetailView):
     model = ModelCreditOutflow
