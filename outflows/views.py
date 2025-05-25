@@ -180,10 +180,10 @@ class CreateOutflowTypeChoice(LoginRequiredMixin, CreateView):
     model = OutflowTypeChoice
     form_class = FormOutflowTypeChoice
     template_name = 'new_outflow.html'
-    success_url = '/outflow/create/'
+    success_url = '/outflow/new/'
 
 class UpdateOutflowTypeChoice(LoginRequiredMixin, UpdateView):
     model = OutflowTypeChoice
     form_class = FormOutflowTypeChoice
-    template_name = 'new_outflow.html'
-    success_url = '/outflow/create/'
+    template_name = 'update_outflow.html'
+    success_url = '/outflow/new/'
