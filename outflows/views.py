@@ -135,8 +135,6 @@ class ListCreditOutflow(LoginRequiredMixin, ListView):
             outflows = outflows.filter(date__lte=end_date)
         return outflows
 
-
-
 class DetailCreditOutflow(LoginRequiredMixin, DetailView):
     model = ModelCreditOutflow
     template_name = "detail_outflow.html"
@@ -182,4 +180,10 @@ class CreateOutflowTypeChoice(LoginRequiredMixin, CreateView):
     model = OutflowTypeChoice
     form_class = FormOutflowTypeChoice
     template_name = 'new_outflow.html'
-    success_url = '/outflow/'
+    success_url = '/outflow/create/'
+
+class UpdateOutflowTypeChoice(LoginRequiredMixin, UpdateView):
+    model = OutflowTypeChoice
+    form_class = FormOutflowTypeChoice
+    template_name = 'new_outflow.html'
+    success_url = '/outflow/create/'
