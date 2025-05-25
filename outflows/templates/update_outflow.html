@@ -113,9 +113,12 @@ EG - Atualizar Despesa
         {% if object.model_name == "modeloutflow" %}
           <a href="{% url 'delete_outflow' pk=object.pk %}" class="btn btn-danger">Deletar Despesa</a>
           <a href="{% url 'outflow' %}" class="btn btn-success">Cancelar</a>
-        {% else %}
+        {% elif object.model_name == "modelcreditoutflow" %}
           <a href="{% url 'delete_credit_outflow' pk=object.pk %}" class="btn btn-danger">Deletar Despesa</a>
           <a href="{% url 'outflow_credit' %}" class="btn btn-success">Cancelar</a>
+        {% elif object.model_name == "outflowtypechoice" %}
+          <a href="{% url 'delete_outflow_choice' pk=object.pk %}" class="btn btn-danger">Deletar Tipo</a>
+          <a href="{% url 'new_outflow' %}" class="btn btn-success">Cancelar</a>  
         {% endif %}
       </div>
     </div>

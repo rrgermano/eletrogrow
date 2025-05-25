@@ -46,15 +46,21 @@ EG - Deletar Despesa
       <h1 class="card-title">Deletar Despesa</h1>
     </div>
     <div class="card-body">
+      {% if object.model_name == "outflowtypechoice" %}
+      <p>Tem certeza que deseja deletar o tipo <strong>{{ object.name }}</strong>?</p>
+      {% else %}
       <p>Tem certeza que deseja deletar a despesa <strong>{{ object.expense }}</strong>?</p>
+      {% endif %}
       <form method="post">
         {% csrf_token %}
         <div class="buttons-container">
           <button type="submit" class="btn btn-danger">Deletar Despesa</button>
           {% if object.model_name == "modeloutflow" %}
             <a href="{% url 'outflow' %}" class="btn btn-success">Cancelar</a>
-          {% else %}
+          {% elif object.model_name == "modelcreditoutflow" %}
             <a href="{% url 'outflow_credit' %}" class="btn btn-success">Cancelar</a>
+          {% elif object.model_name == "outflowtypechoice" %}
+          <a href="{% url 'new_outflow' %}" class="btn btn-success">Cancelar</a>
           {% endif %}
         </div>
       </form>

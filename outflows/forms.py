@@ -41,7 +41,12 @@ class FormOutflow(forms.Form):
             elif last_related_credit:
                 self.fields['project'].initial = last_related_credit.project
             self.fields['date'].initial = now().strftime('%Y-%m-%d')
-        self.fields['type'].help_text = '<a href="/outflow/choices/new/" class="bi bi-plus-square btn btn-success btn-sm"> Novo tipo</a>'
+        self.fields['type'].help_text = '''
+        <div class="type-actions">
+            <a href="/outflow/choices/new/" class="bi bi-plus-square btn btn-success btn-sm"> Novo tipo</a>
+            <a class="edit-type-btn bi bi-pencil-square btn btn-success btn-sm"> Editar</a>
+        </div>
+        '''
         self.fields['type'].widget.attrs.update({'class': 'type-field'})
     def clean_type(self):
         types = self.cleaned_data.get('type')

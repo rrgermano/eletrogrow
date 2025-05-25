@@ -15,7 +15,11 @@ class OutflowTypeChoice(models.Model):
 
     def __str__(self):
         return self.name
-# Create your models here.
+
+    @property
+    def model_name(self):
+        return self._meta.model_name
+
 class ModelOutflow(models.Model):
     expense = models.CharField(max_length=50, verbose_name='Despesa')
     favored = models.ForeignKey(ModelSupplier, on_delete=models.PROTECT, blank=True, null=True, related_name='outflow', verbose_name='Favorecido')

@@ -112,5 +112,36 @@
               </div>
             </div>
         </form>
+
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+              // Elementos do DOM
+              const typeCheckboxes = document.querySelectorAll('input[name="type"]');
+              const editButton = document.querySelector('.edit-type-btn');
+              
+              // Função para verificar se algum tipo está selecionado
+              function checkSelectedTypes() {
+                  const selectedTypes = Array.from(typeCheckboxes).filter(cb => cb.checked);
+                  if (selectedTypes.length === 1) {
+                      // Um tipo selecionado - mostrar botão de edição com link correto
+                      const typeId = selectedTypes[0].value;
+                      editButton.href = `/outflow/choices/update/${typeId}/`;
+                      editButton.style.display = 'inline-block';
+                  } else {
+                      // Nenhum ou múltiplos tipos selecionados - esconder botão
+                      editButton.style.display = 'none';
+                  }
+              }
+              
+              // Adicionar listeners para mudanças nos checkboxes
+              typeCheckboxes.forEach(checkbox => {
+                  checkbox.addEventListener('change', checkSelectedTypes);
+              });
+              
+              // Verificar estado inicial
+              checkSelectedTypes();
+              
+              });
+          </script>
     {% endblock %}
 

@@ -187,3 +187,8 @@ class UpdateOutflowTypeChoice(LoginRequiredMixin, UpdateView):
     form_class = FormOutflowTypeChoice
     template_name = 'update_outflow.html'
     success_url = '/outflow/new/'
+
+class DeleteOutflowTypeChoice(LoginRequiredMixin, DeleteView):
+    model = OutflowTypeChoice
+    template_name = 'delete_outflow.html'
+    success_url = '/outflow/new/'
