@@ -419,6 +419,13 @@ def dash_get_project_name():
 
 
     return lista
+def get_object(obj):
+
+    url = f'https://api.notion.com/v1/pages/{obj}'
+
+    response = requests.get(url, headers=headers)
+    return response.json()
+
 
 def get_clients():
     response = []
@@ -443,8 +450,24 @@ def get_clients():
         response.append(client)
     return response
 
-if __name__ == "__main__":
+def get_projects():
+    response = []
+    for i in get_pages(secrets_eletrogrow.PROJECTS_DATABASE,):
+        project = {}
+        data = i['properties']
+        project['client'] = get_object(data['Clientes']['relation'][0]['id'])['properties']['Nome']['title'][0]['plain_text']
+        project['due_date'] = data['Data vencimento']['date']['start']
+        project['end_project'] = data['Fim projeto/obra']['date']['start'] if data['Fim projeto/obra']['date'] else None
+        project['start_work'] = data['Inicio Obra']['date']['start'] if data['Inicio Obra']['date'] else None
+        project['start_project'] = data['Inicio Projeto']['date']['start'] if data['Inicio Projeto']['date'] else None
+        project['name'] = data['Nome']['title'][0]['plain_text']
+        project['parcel'] = data['Parcelas']['number'] if data['Parcelas']['number'] else 1
+        project['value'] = data['Valor']['number']
+        response.append(project)
+    return response
 
+if __name__ == "__main__":
+    
     #ModelCreditOutflow
     '''
     for i in get_pages(secrets_eletrogrow.CREDIT_PARCEL_DATABASE, num_pages=3):
