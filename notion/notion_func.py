@@ -486,6 +486,27 @@ def get_inflows():
         response.append(inflow)
     return response
 
+def get_suppliers():
+    response = []
+    for i in get_pages(secrets_eletrogrow.SUPPLIERS_DATABASE,):
+        supplier = {}
+        data = i['properties']
+        supplier['name'] = data['Nome']['title'][0]['plain_text']
+        supplier['phone'] = data['Telefone']['phone_number']
+        supplier['email'] = data['E-mail']['email']
+        supplier['address'] = data['Endereço']['rich_text'][0]['plain_text'] if data['Endereço']['rich_text'] else None
+        supplier['neighborhood'] = data['Bairro']['rich_text'][0]['plain_text'] if data['Bairro']['rich_text'] else None
+        location = data['Cidade']['rich_text'][0]['plain_text'].split('/') if data['Cidade']['rich_text'] else None
+        if location:
+            supplier['city'] = location[0] if len(location) > 0 else None
+            supplier['state'] = location[1] if len(location) > 1 else None
+        if data['CPF/CNPJ']['rich_text']:
+            if len(data['CPF/CNPJ']['rich_text'][0]['plain_text']) == 14:
+                supplier['cpf'] = data['CPF/CNPJ']['rich_text'][0]['plain_text']
+            else:
+                supplier['cnpj'] = data['CPF/CNPJ']['rich_text'][0]['plain_text']
+        response.append(supplier)
+    return response
 
 if __name__ == "__main__":
 
