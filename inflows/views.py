@@ -9,7 +9,7 @@ class ListInflow(LoginRequiredMixin, ListView):
     template_name = 'inflow.html'
     context_object_name = 'inflows'
     def get_queryset(self):
-        inflows = super().get_queryset().order_by('paid', 'due_date',)
+        inflows = super().get_queryset().order_by('paid', '-due_date',)
         search = self.request.GET.get('search')
         if search:
             inflows = inflows.filter(income__icontains=search)

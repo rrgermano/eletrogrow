@@ -11,4 +11,5 @@ class InflowAdmin(admin.ModelAdmin):
         'due_date',
         'payment_method',
         'value',
+        'refund',
     )

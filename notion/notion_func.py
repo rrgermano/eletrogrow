@@ -466,8 +466,29 @@ def get_projects():
         response.append(project)
     return response
 
+def get_inflows():
+    response=[]
+    for i in get_pages(secrets_eletrogrow.ENTRY_DATABASE,):
+        data = i['properties']
+        inflow = {}
+
+        inflow['due_date'] = data['Data']['date']['start']
+        for payment in data['Forma de pagamento']['multi_select']:
+            if payment['name'] == 'Reembolso':
+                inflow['refund'] = True
+            else:
+                inflow['payment_method'] = payment['name']
+        inflow['paid'] = data['Pago']['checkbox']
+        if data['Projeto']['relation']:
+            inflow['project'] = get_object(data['Projeto']['relation'][0]['id'])['properties']['Nome']['title'][0]['plain_text']
+        inflow['income'] = data['Receita']['title'][0]['plain_text']
+        inflow['value'] = data['Valor']['number']
+        response.append(inflow)
+    return response
+
+
 if __name__ == "__main__":
-    
+
     #ModelCreditOutflow
     '''
     for i in get_pages(secrets_eletrogrow.CREDIT_PARCEL_DATABASE, num_pages=3):

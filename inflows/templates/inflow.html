@@ -65,6 +65,7 @@ tr:nth-child(even) {
             <th>Data</th>
             <th>Método de pagamento</th>
             <th>Valor</th>
+            <th>Reembolso</th>
             <th>Detalhe</th>
           </tr>
           {% for inflow in inflows %}
@@ -78,6 +79,9 @@ tr:nth-child(even) {
             <td>{{inflow.due_date}}</td>
             <td>{{inflow.payment_method}}</td>
             <td>R$ {{inflow.value|floatformat:2}}</td>
+            <td style="text-align: center; color: {% if inflow.refund %}green{% else %}red{% endif %};">
+                {% if inflow.refund %} ✔ {% else %} ✖ {% endif %}
+            </td>
               <td>
                   <div class="update-button"; style="text-align:center">
                       <a href="{% url 'detail_inflow' pk=inflow.pk %}" class="btn btn-success btn-sm">
