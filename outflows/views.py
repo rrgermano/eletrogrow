@@ -14,18 +14,28 @@ class ListOutflow(LoginRequiredMixin, ListView):
     template_name = 'outflow.html'
     context_object_name = 'outflows'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        queryset = self.get_queryset()
+
+        total = sum(item.value for item in queryset) if queryset else 0
+        context['total_value'] = total
+
+        return context
     def get_queryset(self):
-        outflows = super().get_queryset().order_by('paid', 'date', )
+        outflows = super().get_queryset()
         search = self.request.GET.get('search')
         start_date = self.request.GET.get('start_date')
         end_date = self.request.GET.get('end_date')
         if search:
-            outflows = outflows.filter(expense__icontains=search)
+            expenses = outflows.filter(expense__icontains=search)
+            projects = outflows.filter(project__name__icontains=search)
+            outflows = expenses.union(projects)
         if start_date:
             outflows = outflows.filter(date__gte=start_date)
         if end_date:
             outflows = outflows.filter(date__lte=end_date)
-        return outflows
+        return outflows.order_by('paid', 'date', )
 
 class CreateOutflow(LoginRequiredMixin, View):
 
@@ -120,18 +130,29 @@ class ListCreditOutflow(LoginRequiredMixin, ListView):
     template_name = 'outflow.html'
     context_object_name = 'outflows'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        queryset = self.get_queryset()
+
+        # Usando annotate para calcular a soma manualmente
+        total = sum(item.value for item in queryset) if queryset else 0
+        context['total_value'] = total
+
+        return context
     def get_queryset(self):
-        outflows = super().get_queryset().order_by('date', )
+        outflows = super().get_queryset()
         search = self.request.GET.get('search')
         start_date = self.request.GET.get('start_date')
         end_date = self.request.GET.get('end_date')
         if search:
-            outflows = outflows.filter(expense__icontains=search)
+            expenses = outflows.filter(expense__icontains=search)
+            projects = outflows.filter(project__name__icontains=search)
+            outflows = expenses.union(projects)
         if start_date:
             outflows = outflows.filter(date__gte=start_date)
         if end_date:
             outflows = outflows.filter(date__lte=end_date)
-        return outflows
+        return outflows.order_by('date', )
 
 class DetailCreditOutflow(LoginRequiredMixin, DetailView):
     model = ModelCreditOutflow

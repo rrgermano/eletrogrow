@@ -59,6 +59,7 @@
   {% if outflows %}
       {% if request.user_agent.is_mobile %}
          <table>
+         <tbody>
           <tr>
             <th>Despesa</th>
             <th>Valor</th>
@@ -83,9 +84,18 @@
               </td>
           </tr>
            {% endfor %}
+         </tbody>
+         <tfoot>
+              <tr>
+                <td class="text-end"><strong>Total:</strong></td>
+                <td><strong>R$ {{ total_value|floatformat:2 }}</strong></td>
+                <td></td> <!-- Célula vazia para alinhar com a coluna de detalhes -->
+              </tr>
+            </tfoot>
          </table>
       {% else  %}
         <table>
+        <tbody>
           <tr>
             <th>Despesa</th>
             {% if outflows|has_field:"paid" %}
@@ -138,10 +148,18 @@
               </td>
           </tr>
           {% endfor %}
+        </tbody>
+         <tfoot>
+            <tr>
+              <td colspan="{% if outflows|has_field:'paid' %}6{% else %}4{% endif %}" class="text-end"><strong>Total:</strong></td>
+              <td><strong>R$ {{ total_value|floatformat:2 }}</strong></td>
+            </tr>
+          </tfoot>
         </table>
     {% endif %}
   {% endif %}
 </div>
+
 <script>
 function handleDateInput(input) {
     const wrapper = input.closest('.date-input-wrapper');

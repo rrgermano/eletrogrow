@@ -36,6 +36,7 @@ tr:nth-child(even) {
   {% if inflows %}
       {% if request.user_agent.is_mobile %}
          <table>
+         <tbody>
           <tr>
             <th>Receita</th>
             <th>Valor</th>
@@ -54,9 +55,18 @@ tr:nth-child(even) {
               </td>
           </tr>
            {% endfor %}
-         </table>
+         </tbody>
+         <tfoot>
+              <tr>
+                <td class="text-end"><strong>Total:</strong></td>
+                <td><strong>R$ {{ total_value|floatformat:2 }}</strong></td>
+                <td></td> <!-- Célula vazia para alinhar com a coluna de detalhes -->
+              </tr>
+            </tfoot>
+        </table>
       {% else  %}
         <table>
+        <tbody>
           <tr>
             <th>Receita</th>
             <th>Pago</th>
@@ -91,6 +101,13 @@ tr:nth-child(even) {
               </td>
           </tr>
           {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+              <td colspan="6" class="text-end"><strong>Total:</strong></td>
+              <td><strong>R$ {{ total_value|floatformat:2 }}</strong></td>
+            </tr>
+        </tfoot>
         </table>
     {% endif %}
   {% endif %}

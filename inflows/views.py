@@ -8,6 +8,15 @@ class ListInflow(LoginRequiredMixin, ListView):
     model = ModelInflow
     template_name = 'inflow.html'
     context_object_name = 'inflows'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        queryset = self.get_queryset()
+
+        total = sum(item.value for item in queryset) if queryset else 0
+        context['total_value'] = total
+
+        return context
     def get_queryset(self):
         inflows = super().get_queryset().order_by('paid', '-due_date',)
         search = self.request.GET.get('search')
