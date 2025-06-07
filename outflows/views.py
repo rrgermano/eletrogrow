@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView, CreateView
@@ -37,12 +37,12 @@ class CreateOutflow(LoginRequiredMixin, View):
         form_posted = FormOutflow(request.POST)
         if form_posted.is_valid():
             cleaned_data = form_posted.cleaned_data
-            print(cleaned_data)
             if cleaned_data['payment_method'] == 'CRED':
                 threading.Thread(
                     target=self.__credit_parcel_creation,
                     args=(cleaned_data.copy(),)
                 ).start()
+                return redirect('outflow_credit')
                 
             else:
                 outflow = ModelOutflow(
@@ -56,12 +56,11 @@ class CreateOutflow(LoginRequiredMixin, View):
                 )
                 outflow.save()
                 outflow.type.set(cleaned_data['type'])
-                
-        form = FormOutflow()
-        return render(request, 'outflow.html', {'outflows': ModelOutflow.objects.all()})
+                return redirect('outflow')
     
     def __credit_parcel_creation(self, form):
         parcel_value = form['value']/form['parcel']
+        sleep(2)
         for parcel in range(form['parcel']):
             date = form['date']
             date = (date + relativedelta(months=parcel)).strftime('%Y-%m-%d')
@@ -74,7 +73,6 @@ class CreateOutflow(LoginRequiredMixin, View):
             )
             outflow.save()
             outflow.type.set(form['type'])
-            sleep(1)
 
 class DetailOutflow(LoginRequiredMixin, DetailView):
     model = ModelOutflow
