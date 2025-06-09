@@ -523,6 +523,20 @@ def get_outflows():
         outflow['payment_method'] = data['Forma de pagamento']['select']['name'] if data['Forma de pagamento']['select'] else 'PIX'
         response.append(outflow)
     return response
+
+def get_credit_outflows():
+    response = []
+    for i in get_pages(secrets_eletrogrow.CREDIT_PARCEL_DATABASE,):
+        data = i['properties']
+        outflow={}
+        outflow['date'] = data['Data']['date']['start'] if data['Data']['date'] else None
+        outflow['expense'] = data['Despesa']['title'][0]['plain_text']
+        outflow['project'] = get_object(data['Projeto']['relation'][0]['id'])['properties']['Nome']['title'][0]['plain_text'] if data['Projeto']['relation'] else None
+        outflow['type'] = [name['name'] for name in data['Tipo']['multi_select']] if data['Tipo']['multi_select'] else None
+        outflow['value'] = data['Valor']['number']
+        outflow['closing'] = data['Fechamento']['checkbox']
+        response.append(outflow)
+    return response
 if __name__ == "__main__":
 
     #ModelCreditOutflow
