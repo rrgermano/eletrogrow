@@ -14,5 +14,5 @@ class Command(BaseCommand):
         for name in projects_name:
             if projects_name.count(name) > 1:
                 print(f'Projeto: {name} vezes: {projects_name.count(name)}')
-        ModelProject.objects.bulk_create(projects)
+        ModelProject.objects.bulk_create(projects, update_conflicts=True)
             
