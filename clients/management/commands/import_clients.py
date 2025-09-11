@@ -6,4 +6,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for client in get_clients():
-            ModelClient.objects.create(**client)
+            ModelClient.objects.update_or_create(**client)
