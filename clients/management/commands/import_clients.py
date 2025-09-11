@@ -7,7 +7,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for client in get_clients():
             print(client['name'])
-            obj, created = ModelClient.objects.update_or_create(**client)
+            obj, created = ModelClient.objects.update_or_create(
+                name=client['name'],
+                defaults=client
+            )
 
             print(f'Nome: {obj.name}, Criado {created}')
 
