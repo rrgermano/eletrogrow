@@ -58,10 +58,10 @@ e utilizar um proxy reverso (Ngrok) para publicar em serviços de internet casei
 É o caso como o proprietário desse repositório publica essa aplicação
 
 Todos arquivos necessário estão disponíveis em:
-- eletrogrow.conf (configuração do NGinx)
-- eletrogrow.service (serviço para rodar o WSGI)
-- eletrogrow_uwsgi.ini (arquivo de configuração do uwsgi)
-- uwsgi_params (arquivo de parâmetros do uwsgi)
+- eletrogrow.conf (configuração do NGinx);
+- eletrogrow.service (serviço para rodar o WSGI);
+- eletrogrow_uwsgi.ini (arquivo de configuração do uwsgi);
+- uwsgi_params (arquivo de parâmetros do uwsgi).
 
 #### Comandos únicos
 
@@ -79,5 +79,14 @@ python manage.py migrate_clients\
 && python manage.py migrate_outflows\
 && python manage.py migrate_credit_outflows
 ```
-Importante ressaltar a importância de seguir a sequência devido a dependências que cada banco tem entre si.
+Necessário ressaltar a importância de seguir a sequência devido a dependências que cada banco tem entre si.
 
+#### Em desenvolvimento
+
+- Implementação do cálculo de fatura do cartão de crédito;
+- Criação de despesas recorrentes.
+
+#### TODO
+- Criação de agenda;
+- Criação de dashboard financeiro;
+- Vincular projeto a dias de trabalho.
