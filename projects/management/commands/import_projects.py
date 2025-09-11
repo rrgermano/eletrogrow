@@ -14,5 +14,9 @@ class Command(BaseCommand):
         for name in projects_name:
             if projects_name.count(name) > 1:
                 print(f'Projeto: {name} vezes: {projects_name.count(name)}')
-        ModelProject.objects.bulk_create(projects, update_conflicts=True)
+        ModelProject.objects.bulk_create(projects, ignore_conflicts=True)
+
+        missing = set([p.name for p in projects]) - set(ModelProject.objects.values_list("name", flat=True))
+        if missing:
+            print("Esses não foram criados:", missing)
             
