@@ -6,4 +6,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for client in get_clients():
-            ModelClient.objects.update_or_create(**client)
+            print(client['name'])
+            obj, created = ModelClient.objects.update_or_create(**client)
+
+            print(f'Nome: {obj.name}, Criado {created}')
+
