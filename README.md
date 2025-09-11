@@ -41,6 +41,12 @@ Em saídas é possível cadastrar as despesas, vincular ou não à determinado p
 - data de vencimento/movimentação
 - se já foi pago ou não
 
+### Exemplo de imagem do sistema:
+<p align="center">
+    <img src="./outflow_credit.png" alt="Image Example" width="400px">
+</p>
+
+
 #### Todo sistema também é acessível através
 #### localhost:8000/admin
 (se estiver rodando na porta 8000, caso do comando runserver)
