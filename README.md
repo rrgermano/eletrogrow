@@ -11,7 +11,7 @@
 ## Descrição
 
 Projeto criado em Python/Django full-stack para abrigar os dados de movimentações financeiras da empresa de elétrica Eletrogrow.
-Inicialmente desenvolvimento para funcionar em um servidor caseiro baseado em Raspberry Pi 3B.
+Desenvolvido para funcionar em um servidor caseiro baseado em Raspberry Pi 3B. Mas funciona também em plataformas x86 com hardware equivalente ou superior.
 Baseando-se na plataforma foi necessário poupar recursos. Portanto o banco de dados é o SQLite, e dispensando dockerização e afins.
 
 ## Instalação
