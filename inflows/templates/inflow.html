@@ -45,15 +45,22 @@ tr:nth-child(even) {
         <label for="end_date">Até</label>
     </div>
 
-    <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="only_refund"
+    <div class="form-check-refund">
+            <input class="form-check-input-refund" type="checkbox" id="only_refund"
                    name="only_refund" value="1"
                    {% if request.GET.only_refund %}checked{% endif %}>
-            <label class="form-check-label" for="only_refund">
+            <label class="form-check-label-refund" for="only_refund">
                 Somente reembolso
             </label>
         </div>
-
+    <div class="form-check-paid">
+            <input class="form-check-input-paid" type="checkbox" id="not_paid"
+                   name="not_paid" value="1"
+                   {% if request.GET.not_paid %}checked{% endif %}>
+            <label class="form-check-label-paid" for="not_paid">
+                Não pagas
+            </label>
+        </div>
 
     <button type="submit" class="btn btn-success">Buscar</button>
     </form>

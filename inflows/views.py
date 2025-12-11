@@ -24,12 +24,15 @@ class ListInflow(LoginRequiredMixin, ListView):
         start_date = self.request.GET.get('start_date')
         end_date = self.request.GET.get('end_date')
         only_refund = self.request.GET.get('only_refund')
+        not_paied = self.request.GET.get('not_paid')
         if start_date:
             inflows = inflows.filter(due_date__gte=start_date)
         if end_date:
             inflows = inflows.filter(due_date__lte=end_date)
         if only_refund:
             inflows = inflows.filter(refund=True)
+        if not_paied:
+            inflows = inflows.filter(paid=False)
         if search:
             incomes = inflows.filter(income__icontains=search)
             projects = inflows.filter(project__name__icontains=search)
