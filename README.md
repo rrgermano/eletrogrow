@@ -2,15 +2,16 @@
 
 [![license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](./LICENSE)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/rrgermano/eletrogrow/activity)
-[![Python 3.6](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
+[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
 
+[![Raspberry Pi](https://img.shields.io/badge/-Raspberry_Pi-C51A4A?style=for-the-badge&logo=Raspberry-Pi)](https://www.raspberrypi.com/)
 [![Django](https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white)](https://www.djangoproject.com/)
 [![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)](https://sqlite.org/)
 [![Nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white)](https://nginx.org/)
 ## Descrição
 
 Projeto criado em Python/Django full-stack para abrigar os dados de movimentações financeiras da empresa de elétrica Eletrogrow.
-Inicialmente desenvolvimento para funcionar em um servidor caseiro baseado em Raspberry Pi 3B.
+Desenvolvido para funcionar em um servidor caseiro baseado em Raspberry Pi 3B. Mas funciona também em plataformas x86 com hardware equivalente ou superior.
 Baseando-se na plataforma foi necessário poupar recursos. Portanto o banco de dados é o SQLite, e dispensando dockerização e afins.
 
 ## Instalação
