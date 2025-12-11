@@ -20,17 +20,44 @@ tr:nth-child(even) {
   background-color: #dddddd;
 }
 
-.top-line{
-    display:flex;
-    gap: 16px;
+    .top-line{
+        display:flex;
+        gap: 16px;
+        margin-bottom: 20px;
     }
 </style>
 <div class="top-line">
-<form method="GET" action="{% url 'inflow' %}">
-    <input type="text" name="search" placeholder="Buscar receita...">
-    <button type="submit"; class="btn btn-success btn-sm">Buscar</button>
-</form>
-    <a href="{% url 'new_inflow' %}" class="btn btn-success btn-sm">Nova Receita</a>
+    <form method="GET" action="{% url 'inflow' %}" class="d-flex align-items-center gap-3 flex-wrap">
+
+    <div class="flex-grow-1">
+        <input type="text" name="search" placeholder="Buscar Receita..." class="form-control" value="{{ request.GET.search }}">
+    </div>
+
+    <div class="form-floating date-input-wrapper">
+        <input type="date" name="start_date" id="start_date" class="form-control"
+               oninput="handleDateInput(this)" {% if request.GET.start_date %}value="{{ request.GET.start_date }}"{% endif %}>
+        <label for="start_date">À partir</label>
+    </div>
+
+    <div class="form-floating date-input-wrapper">
+        <input type="date" name="end_date" id="end_date" class="form-control"
+               oninput="handleDateInput(this)" {% if request.GET.end_date %}value="{{ request.GET.end_date }}"{% endif %}>
+        <label for="end_date">Até</label>
+    </div>
+
+    <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="only_refund"
+                   name="only_refund" value="1"
+                   {% if request.GET.only_refund %}checked{% endif %}>
+            <label class="form-check-label" for="only_refund">
+                Somente reembolso
+            </label>
+        </div>
+
+
+    <button type="submit" class="btn btn-success">Buscar</button>
+    </form>
+    <a href="{% url 'new_inflow' %}" class="btn btn-success link-new">Nova Receita</a>
 </div>
 <div class="inflow-list">
   {% if inflows %}

@@ -17,12 +17,30 @@ class ListInflow(LoginRequiredMixin, ListView):
         context['total_value'] = total
 
         return context
+
     def get_queryset(self):
-        inflows = super().get_queryset().order_by('paid', '-due_date',)
+        inflows = super().get_queryset()
         search = self.request.GET.get('search')
+        start_date = self.request.GET.get('start_date')
+        end_date = self.request.GET.get('end_date')
+        only_refund = self.request.GET.get('only_refund')
+        if start_date:
+            inflows = inflows.filter(due_date__gte=start_date)
+        if end_date:
+            inflows = inflows.filter(due_date__lte=end_date)
+        if only_refund:
+            inflows = inflows.filter(refund=True)
         if search:
-            inflows = inflows.filter(income__icontains=search)
-        return inflows
+            incomes = inflows.filter(income__icontains=search)
+            projects = inflows.filter(project__name__icontains=search)
+            inflows = incomes.union(projects)
+        return inflows.order_by('paid', 'due_date', )
+    # def get_queryset(self):
+    #     inflows = super().get_queryset().order_by('paid', '-due_date',)
+    #     search = self.request.GET.get('search')
+    #     if search:
+    #         inflows = inflows.filter(income__icontains=search)
+    #     return inflows
 
 class CreateInflow(LoginRequiredMixin, CreateView):
     model = ModelInflow

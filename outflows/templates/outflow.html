@@ -36,7 +36,7 @@
     <form method="GET" action="{% url 'outflow_credit' %}" class="d-flex align-items-center gap-3 flex-wrap">
 {% endif %}
     <div class="flex-grow-1">
-        <input type="text" name="search" placeholder="Buscar Despesa..." class="form-control">
+        <input type="text" name="search" placeholder="Buscar Despesa..." class="form-control"  value="{{ request.GET.search }}">
     </div>
 
     <div class="form-floating date-input-wrapper">
@@ -54,7 +54,7 @@
     <button type="submit" class="btn btn-success">Buscar</button>
     </form>
     <a href="{% url 'new_outflow' %}" class="btn btn-success link-new">Nova Despesa</a>
-</div>
+ </div>
 <div class="Outflow-list">
   {% if outflows %}
       {% if request.user_agent.is_mobile %}

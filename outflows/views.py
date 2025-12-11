@@ -27,14 +27,15 @@ class ListOutflow(LoginRequiredMixin, ListView):
         search = self.request.GET.get('search')
         start_date = self.request.GET.get('start_date')
         end_date = self.request.GET.get('end_date')
-        if search:
-            expenses = outflows.filter(expense__icontains=search)
-            projects = outflows.filter(project__name__icontains=search)
-            outflows = expenses.union(projects)
         if start_date:
             outflows = outflows.filter(date__gte=start_date)
         if end_date:
             outflows = outflows.filter(date__lte=end_date)
+        if search:
+            expenses = outflows.filter(expense__icontains=search)
+            projects = outflows.filter(project__name__icontains=search)
+            outflows = expenses.union(projects)
+
         return outflows.order_by('paid', 'date', )
 
 class CreateOutflow(LoginRequiredMixin, View):
