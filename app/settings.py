@@ -23,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-2vnb9$b##f)y$k4k(qt%9v&e8t48m)(lo=qq^%gzcn7!oo0ehj'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['192.168.15.129', '192.168.15.86', '192.168.15.58', 'localhost', '127.0.0.1', 'mint-wren-cute.ngrok-free.app']
-CSRF_TRUSTED_ORIGINS = ['https://mint-wren-cute.ngrok-free.app','http://192.168.15.58', 'http://localhost', 'http://127.0.0.1']
+ALLOWED_HOSTS = ['192.168.15.129', '192.168.15.86', '192.168.15.58', 'localhost', '127.0.0.1',  'intranet.eletrogrow.com.br']
+CSRF_TRUSTED_ORIGINS = ['http://192.168.15.58', 'http://localhost', 'http://127.0.0.1', 'http://intranet.eletrogrow.com.br', 'https://intranet.eletrogrow.com.br']
 
 # Application definition
 
