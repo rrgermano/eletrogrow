@@ -49,6 +49,7 @@ EG - Detalhar Projeto
     <p><strong>Parcelas:</strong> {{ object.parcel|default_if_none:"-" }}</p>
     <p><strong>Valor:</strong> R$ {{ object.value|default_if_none:"-"|floatformat:2 }}</p>
     <p><strong>Data de vencimento:</strong>  {{ object.due_date|default_if_none:"-" }}</p>
+    <p><strong>Descriçao:</strong>  {{ object.description|default_if_none:"-" }}</p>
   </div>
     <div class="buttons-container">
       <a href="{% url 'update_project' pk=object.pk %}" class="btn btn-success">Editar</a>
