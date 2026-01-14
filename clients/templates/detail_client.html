@@ -58,6 +58,7 @@ EG - Detalhar Cliente
               -
             {% endif %}
         </p>
+    <p><strong>Prefixo projeto:</strong>  {{ object.project_prefix }}</p>
   </div>
     <div class="buttons-container">
       <a href="{% url 'update_client' pk=object.pk %}" class="btn btn-success">Editar</a>

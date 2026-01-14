@@ -64,6 +64,7 @@ tr:nth-child(even) {
             <th>Cidade</th>
             <th>CEP</th>
             <th>CPF/CNPJ</th>
+            <th>Proj. Prefixo</th>
             <th>Detalhe</th>
           </tr>
           {% for client in clients %}
@@ -82,6 +83,7 @@ tr:nth-child(even) {
             {% else %}
               <td>-</td>
             {% endif %}
+            <td>{{client.project_prefix|default_if_none:"-"}}</td>
               <td>
                   <div class="update-button"; style="text-align:center">
                       <a href="{% url 'detail_client' pk=client.pk %}" class="btn btn-success btn-sm">

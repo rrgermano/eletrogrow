@@ -14,5 +14,6 @@ class ClientsAdmin(admin.ModelAdmin):
         'state',
         'cep',
         'cpf',
-        'cnpj'
+        'cnpj',
+        'project_prefix',
     )
