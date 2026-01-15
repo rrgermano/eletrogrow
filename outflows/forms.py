@@ -16,17 +16,17 @@ METHOD_CHOICES =[
 
 class FormOutflow(forms.Form):
     expense = forms.CharField(max_length=50, label='Despesa')
-    favored = forms.ModelChoiceField(queryset=ModelSupplier.objects.all(), blank=True, required=False, label='Favorecido')
+    favored = forms.ModelChoiceField(queryset=ModelSupplier.objects.none(), required=False, label='Favorecido')
     paid = forms.BooleanField(label='Pago', required=False, initial=False)
     type = forms.ModelMultipleChoiceField(queryset=OutflowTypeChoice.objects.all(), blank=True, required=False, widget=forms.CheckboxSelectMultiple, label='Tipo', to_field_name=None)
     date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), label='Data',)
     payment_method = forms.ChoiceField(choices=METHOD_CHOICES, label='Método de pagamento', initial='CRED')
-    project = forms.ModelChoiceField(queryset=ModelProject.objects.all(), blank=True, label='Projeto', required=False,)
+    project = forms.ModelChoiceField(queryset=ModelProject.objects.none(), label='Projeto', required=False)
     parcel = forms.IntegerField(label='Parcelas', initial=1)
     value = forms.FloatField(label='Valor')
 
     def __init__(self, *args, **kwargs):
-        self.instance = kwargs.pop('instance', None) 
+        self.instance = kwargs.pop('instance', None)
         super().__init__(*args, **kwargs)
         if not self.instance:
             last_related_outflow = ModelOutflow.objects.order_by('-id').first()
@@ -54,6 +54,13 @@ class FormOutflow(forms.Form):
             return list(types)
         return []
 
+    def clean_favored(self):
+        value = self.cleaned_data.get("favored")
+        return value
+
+    def clean_project(self):
+        value = self.cleaned_data.get("project")
+        return value
 class FormUpdateOutflow(forms.Form):
     expense = forms.CharField(max_length=50, label='Despesa')
     favored = forms.ModelChoiceField(queryset=ModelSupplier.objects.all(), blank=True, required=False, label='Favorecido')

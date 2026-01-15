@@ -12,30 +12,30 @@
         border-radius: 10px;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
       }
-  
+
       form h1 {
         font-size: 2rem;
         margin-bottom: 20px;
         text-align: center;
       }
-  
+
       table {
         margin: 0 auto;
         border-collapse: collapse;
         width: 100%;
         max-width: 600px;
       }
-  
+
       th, td {
         padding: 4px;
         text-align: left;
         border-bottom: 1px solid #ddd;
       }
-  
+
       th {
         background-color: #f2f2f2;
       }
-  
+
       input[type="text"], input[type="number"], input[type="date"], select, textarea {
         padding: 8px;
         font-size: 14px;
@@ -46,7 +46,7 @@
         margin-bottom: 8px;
         transition: border-bottom-color 0.3s ease-in-out;
       }
-  
+
       input[type="text"]:focus, input[type="number"]:focus,input[type="date"]:focus, select:focus, textarea:focus {
         outline: none;
         border-bottom-color: #0096c7;
@@ -79,16 +79,16 @@
         margin: 0 10px;
       }
 
-  
+
       .btn-danger {
         background-color: #d9534f;
         text-decoration: none !important;
       }
-  
+
       .btn-danger:hover {
         background-color: #d2221c;
       }
-  
+
       .error-message {
         color: #d9534f;
         font-size: 14px;
@@ -98,7 +98,7 @@
       a {
         text-decoration: none !important;
       }
-  
+
     </style>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -118,7 +118,7 @@
               // Elementos do DOM
               const typeCheckboxes = document.querySelectorAll('input[name="type"]');
               const editButton = document.querySelector('.edit-type-btn');
-              
+
               // Função para verificar se algum tipo está selecionado
               function checkSelectedTypes() {
                   const selectedTypes = Array.from(typeCheckboxes).filter(cb => cb.checked);
@@ -132,16 +132,48 @@
                       editButton.style.display = 'none';
                   }
               }
-              
+
               // Adicionar listeners para mudanças nos checkboxes
               typeCheckboxes.forEach(checkbox => {
                   checkbox.addEventListener('change', checkSelectedTypes);
               });
-              
+
               // Verificar estado inicial
               checkSelectedTypes();
-              
+
               });
+
+            $(function () {
+                $('#id_favored').select2({
+                    tags: true,
+                    placeholder: 'Selecione um favorecido',
+                    allowClear: true,
+                    ajax: {
+                        url: "{% url 'favored-autocomplete' %}",
+                        dataType: 'json',
+                        delay: 250,
+                        data: params => ({ q: params.term }),
+                        processResults: data => data
+                    }
+                });
+            });
+
+            $(function () {
+                $('#id_project').select2({
+                    tags: true,
+                    placeholder: 'Selecione um projeto',
+                    allowClear: true,
+                    ajax: {
+                        url: "{% url 'project-autocomplete' %}",
+                        dataType: 'json',
+                        delay: 250,
+                        data: params => ({ q: params.term }),
+                        processResults: data => data
+                    }
+                });
+            });
+
+
           </script>
     {% endblock %}
 

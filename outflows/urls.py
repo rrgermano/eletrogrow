@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from .views import (ListOutflow,
                     CreateOutflow,
                     UpdateOutflow,
@@ -10,7 +10,9 @@ from .views import (ListOutflow,
                     DeleteCreditOutflow,
                     CreateOutflowTypeChoice,
                     UpdateOutflowTypeChoice,
-                    DeleteOutflowTypeChoice
+                    DeleteOutflowTypeChoice,
+                    favored_autocomplete,
+                    project_autocomplete
                     )
 
 urlpatterns = [
@@ -26,5 +28,7 @@ urlpatterns = [
     path('choices/new/', CreateOutflowTypeChoice.as_view(), name='new_outflow_choice'),
     path('choices/update/<int:pk>/', UpdateOutflowTypeChoice.as_view(), name='update_outflow_choice'),
     path('choices/delete/<int:pk>/', DeleteOutflowTypeChoice.as_view(), name='delete_outflow_choice'),
+    path('favored-autocomplete/', favored_autocomplete, name='favored-autocomplete'),
+    path('project-autocomplete/', project_autocomplete, name='project-autocomplete'),
 
 ]

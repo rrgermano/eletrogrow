@@ -4,9 +4,12 @@ from django.views import View
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView, CreateView
 from .forms import FormOutflow, FormUpdateOutflow, FormOutflowTypeChoice
 from .models import ModelOutflow, ModelCreditOutflow, OutflowTypeChoice
+from supplier.models import ModelSupplier
+from projects.models import ModelProject
 from dateutil.relativedelta import relativedelta
 import threading
 from time import sleep
+from django.http import JsonResponse
 
 
 class ListOutflow(LoginRequiredMixin, ListView):
@@ -212,3 +215,17 @@ class DeleteOutflowTypeChoice(LoginRequiredMixin, DeleteView):
     model = OutflowTypeChoice
     template_name = 'delete_outflow.html'
     success_url = '/outflow/new/'
+
+def favored_autocomplete(request):
+    q = request.GET.get('q', '')
+
+    suppliers = ModelSupplier.objects.filter(name__icontains=q).order_by('name')[:20]
+    results = [{"id": s.id, "text": s.name} for s in suppliers]
+    return JsonResponse({"results": results})
+
+def project_autocomplete(request):
+    q = request.GET.get('q', '')
+
+    suppliers = ModelProject.objects.filter(name__icontains=q).order_by('name')[:20]
+    results = [{"id": s.id, "text": s.name} for s in suppliers]
+    return JsonResponse({"results": results})

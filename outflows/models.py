@@ -2,7 +2,6 @@ from django.db import models
 from django.utils.timezone import now
 from projects.models import ModelProject
 from supplier.models import ModelSupplier
-
 METHOD_CHOICES = [
     ('PIX', 'PIX'),
     ('DEB', 'Cartão de débito'),

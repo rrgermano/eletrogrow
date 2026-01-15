@@ -13,6 +13,7 @@ class ModelProject(models.Model):
     due_date = models.DateField(blank=True, null=True, verbose_name='Data de vencimento')
     description = models.TextField(verbose_name='Descrição')
 
+
     def __str__(self):
         return self.name
 
