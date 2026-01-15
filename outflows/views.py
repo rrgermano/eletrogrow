@@ -49,6 +49,7 @@ class CreateOutflow(LoginRequiredMixin, View):
 
     def post(self, request):
         form_posted = FormOutflow(request.POST)
+        print(form_posted)
         if form_posted.is_valid():
             cleaned_data = form_posted.cleaned_data
             if cleaned_data['payment_method'] == 'CRED':
@@ -71,7 +72,7 @@ class CreateOutflow(LoginRequiredMixin, View):
                 outflow.save()
                 outflow.type.set(cleaned_data['type'])
                 return redirect('outflow')
-    
+        return render(request, 'new_outflow.html', {'form': form_posted})
     def __credit_parcel_creation(self, form):
         parcel_value = form['value']/form['parcel']
         sleep(2)
@@ -217,15 +218,16 @@ class DeleteOutflowTypeChoice(LoginRequiredMixin, DeleteView):
     success_url = '/outflow/new/'
 
 def favored_autocomplete(request):
-    q = request.GET.get('q', '')
+    query = request.GET.get('q', '')
 
-    suppliers = ModelSupplier.objects.filter(name__icontains=q).order_by('name')[:20]
-    results = [{"id": s.id, "text": s.name} for s in suppliers]
+    suppliers = ModelSupplier.objects.filter(name__icontains=query).order_by('name')[:20]
+    results = [{"id": supplier.id, "text": supplier.name} for supplier in suppliers]
     return JsonResponse({"results": results})
 
 def project_autocomplete(request):
-    q = request.GET.get('q', '')
+    query = request.GET.get('q', '')
 
-    suppliers = ModelProject.objects.filter(name__icontains=q).order_by('name')[:20]
-    results = [{"id": s.id, "text": s.name} for s in suppliers]
+    projects = ModelProject.objects.filter(name__icontains=query).order_by('name')[:20]
+    results = [{"id": project.id, "text": project.name} for project in projects]
     return JsonResponse({"results": results})
+

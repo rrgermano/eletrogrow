@@ -16,12 +16,12 @@ METHOD_CHOICES =[
 
 class FormOutflow(forms.Form):
     expense = forms.CharField(max_length=50, label='Despesa')
-    favored = forms.ModelChoiceField(queryset=ModelSupplier.objects.none(), required=False, label='Favorecido')
+    favored = forms.ModelChoiceField(queryset=ModelSupplier.objects.all(), required=False, label='Favorecido')
     paid = forms.BooleanField(label='Pago', required=False, initial=False)
     type = forms.ModelMultipleChoiceField(queryset=OutflowTypeChoice.objects.all(), blank=True, required=False, widget=forms.CheckboxSelectMultiple, label='Tipo', to_field_name=None)
     date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), label='Data',)
     payment_method = forms.ChoiceField(choices=METHOD_CHOICES, label='Método de pagamento', initial='CRED')
-    project = forms.ModelChoiceField(queryset=ModelProject.objects.none(), label='Projeto', required=False)
+    project = forms.ModelChoiceField(queryset=ModelProject.objects.all(), label='Projeto', required=False)
     parcel = forms.IntegerField(label='Parcelas', initial=1)
     value = forms.FloatField(label='Valor')
 
