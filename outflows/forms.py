@@ -54,13 +54,6 @@ class FormOutflow(forms.Form):
             return list(types)
         return []
 
-    def clean_favored(self):
-        value = self.cleaned_data.get("favored")
-        return value
-
-    def clean_project(self):
-        value = self.cleaned_data.get("project")
-        return value
 class FormUpdateOutflow(forms.Form):
     expense = forms.CharField(max_length=50, label='Despesa')
     favored = forms.ModelChoiceField(queryset=ModelSupplier.objects.all(), blank=True, required=False, label='Favorecido')

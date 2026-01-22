@@ -1,5 +1,6 @@
 from django.db import models
 from clients.models import ModelClient
+from .utils import project_name
 
 # Create your models here.
 class ModelProject(models.Model):
@@ -12,13 +13,12 @@ class ModelProject(models.Model):
     value = models.FloatField(blank=True, null=True, verbose_name='Valor')
     due_date = models.DateField(blank=True, null=True, verbose_name='Data de vencimento')
     description = models.TextField(verbose_name='Descrição')
+    #tasks = models.JSONField(verbose_name='Tarefas')
 
 
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
-        projects = ModelProject.objects.filter(client=self.client)
-        project_serie = int(max([project.name.removeprefix(self.client.project_prefix) for project in projects])) + 1
-        self.name = f'{self.client.project_prefix}{project_serie:03}'
+        self.name = project_name(self.client, ModelProject)
         super().save(*args, **kwargs)

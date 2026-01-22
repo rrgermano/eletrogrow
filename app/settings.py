@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-2vnb9$b##f)y$k4k(qt%9v&e8t48m)(lo=qq^%gzcn7!oo0ehj'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.15.129', '192.168.15.86', '192.168.15.58', 'localhost', '127.0.0.1',  'intranet.eletrogrow.com.br']
+ALLOWED_HOSTS = ['*','192.168.15.129', '192.168.15.86', '192.168.15.58', 'localhost', '127.0.0.1',  'intranet.eletrogrow.com.br']
 CSRF_TRUSTED_ORIGINS = ['http://192.168.15.58', 'http://localhost', 'http://127.0.0.1', 'http://intranet.eletrogrow.com.br', 'https://intranet.eletrogrow.com.br']
 
 # Application definition
@@ -40,12 +40,15 @@ INSTALLED_APPS = [
 
     'phonenumber_field',
     'django_user_agents',
+    'rest_framework',
+    'corsheaders',
 
     'clients',
     'projects',
     'inflows',
     'outflows',
     'supplier',
+    'services',
 ]
 
 LOGIN_URL = 'login'
@@ -56,6 +59,7 @@ LOGOUT_REDIRECT_URL = '/login/'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -148,3 +152,5 @@ CACHES = {
 }
 
 USER_AGENTS_CACHE = 'default'
+
+CORS_ALLOW_ALL_ORIGINS = True

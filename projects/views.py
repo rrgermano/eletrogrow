@@ -1,7 +1,15 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from django.shortcuts import get_object_or_404
 from .models import ModelProject
 from .forms import FormProject
+from .serializers import ProjectSerializer
+from .utils import project_name
+from clients.models import ModelClient
 
 # Create your views here.
 class ListProject(LoginRequiredMixin, ListView):
@@ -35,3 +43,18 @@ class DeleteProject(LoginRequiredMixin, DeleteView):
     model = ModelProject
     template_name = 'delete_project.html'
     success_url = '/project/'
+
+class ListCreateProjectApiView(ListCreateAPIView):
+    queryset = ModelProject.objects.all()
+    serializer_class = ProjectSerializer
+
+class RetrieveUpdateDeleteProjectApiView(RetrieveUpdateDestroyAPIView):
+    queryset = ModelProject.objects.all()
+    serializer_class = ProjectSerializer
+@api_view(['GET'])
+def get_project_name(request, pk):
+    client = get_object_or_404(ModelClient, pk=pk)
+    response = {'project_name': project_name(client, ModelProject)}
+    return Response(response, status=status.HTTP_200_OK)
+
+

@@ -15,4 +15,5 @@ urlpatterns = [
     path('inflow/', include('inflows.urls')),
     path('outflow/', include('outflows.urls')),
     path('supplier/', include('supplier.urls')),
+    path('api/v1/', include('app.urls_api')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

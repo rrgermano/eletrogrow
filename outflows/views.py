@@ -218,16 +218,22 @@ class DeleteOutflowTypeChoice(LoginRequiredMixin, DeleteView):
     success_url = '/outflow/new/'
 
 def favored_autocomplete(request):
-    query = request.GET.get('q', '')
+    if request.user.is_authenticated:
+        query = request.GET.get('q', '')
 
-    suppliers = ModelSupplier.objects.filter(name__icontains=query).order_by('name')[:20]
-    results = [{"id": supplier.id, "text": supplier.name} for supplier in suppliers]
+        suppliers = ModelSupplier.objects.filter(name__icontains=query).order_by('name')[:20]
+        results = [{"id": supplier.id, "text": supplier.name} for supplier in suppliers]
+    else:
+        results = {}
     return JsonResponse({"results": results})
 
 def project_autocomplete(request):
-    query = request.GET.get('q', '')
+    if request.user.is_authenticated:
+        query = request.GET.get('q', '')
 
-    projects = ModelProject.objects.filter(name__icontains=query).order_by('name')[:20]
-    results = [{"id": project.id, "text": project.name} for project in projects]
+        projects = ModelProject.objects.filter(name__icontains=query).order_by('name')[:20]
+        results = [{"id": project.id, "text": project.name} for project in projects]
+    else:
+        results = {}
     return JsonResponse({"results": results})
 

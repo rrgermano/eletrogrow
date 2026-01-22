@@ -2,6 +2,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
 from .models import ModelClient
 from .forms import FormClient
+from .serializers import ClientSerializer
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 
 
@@ -36,3 +38,11 @@ class DeleteClient(LoginRequiredMixin, DeleteView):
     model = ModelClient
     template_name = 'delete_client.html'
     success_url = '/client/'
+
+class ListCreateClientApiView(ListCreateAPIView):
+    queryset = ModelClient.objects.all()
+    serializer_class = ClientSerializer
+
+class RetriveDeleteUpdateClientApiView(RetrieveUpdateDestroyAPIView):
+    queryset = ModelClient.objects.all()
+    serializer_class = ClientSerializer

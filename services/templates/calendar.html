@@ -1,0 +1,42 @@
+{# templates/ordens/calendario.html #}
+<h2>Calendário de {{ nome_mes }} de {{ ano }}</h2>
+
+<table border="1" cellspacing="0" cellpadding="4">
+    <thead>
+        <tr>
+            <th>Seg</th>
+            <th>Ter</th>
+            <th>Qua</th>
+            <th>Qui</th>
+            <th>Sex</th>
+            <th>Sáb</th>
+            <th>Dom</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for semana in semanas %}
+            <tr>
+                {% for dia in semana %}
+                    {% if dia == 0 %}
+                        <td class="fora-do-mes"></td>
+                    {% else %}
+                        <td class="dia">
+                            <div class="numero-dia">{{ dia }}</div>
+                            <ul class="os-lista">
+                                {% for os in os_por_dia.dia %}
+                                    <li>
+                                        <a href="{% url 'os_detalhe' os.id %}">
+                                            OS #{{ os.id }} - {{ os.cliente }}
+                                        </a>
+                                    </li>
+                                {% empty %}
+                                    {# sem OS nesse dia #}
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
