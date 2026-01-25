@@ -1,7 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from .models import ModelInflow
 from .forms import FormInflow
+from .serializers import InflowSerializer
+from pprint import pprint
 
 
 class ListInflow(LoginRequiredMixin, ListView):
@@ -65,3 +68,14 @@ class DeleteInflow(LoginRequiredMixin, DeleteView):
     model = ModelInflow
     template_name = 'delete_inflow.html'
     success_url = '/inflow/'
+
+class ListCreateInflowApiView(ListCreateAPIView):
+    queryset = ModelInflow.objects.all()
+    serializer_class = InflowSerializer
+
+class RetrieveUpdateDestroyInflowApiView(RetrieveUpdateDestroyAPIView):
+    queryset = ModelInflow.objects.all()
+    serializer_class = InflowSerializer
+    def update(self, request, *args, **kwargs):
+        pprint(request.data, indent=1)
+        return super().update(request, *args, **kwargs)

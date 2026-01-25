@@ -7,6 +7,7 @@ METHOD_CHOICES = [
     ('CRED', 'Cartão de crédito'),
     ('DEB', 'Cartão de débito'),
     ('BOL', 'Boleto'),
+    ('MON', 'Espécie'),
 ]
 
 class ModelInflow(models.Model):
@@ -28,7 +29,7 @@ class ModelInflow(models.Model):
             if self.pk:
                 original = type(self).objects.get(pk=self.pk)
                 if not original.paid:
-                    self.paid_date = now()
+                    self.paid_date = now().date()
             else:
-                self.paid_date = now()
+                self.paid_date = now().date()
         super().save(*args, **kwargs)

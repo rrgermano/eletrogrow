@@ -19,7 +19,3 @@ class ProjectSerializer(serializers.ModelSerializer):
             'due_date',
             'description',
         ]
-
-        # def to_reprentation(self, instance):
-        #     repr = super().to_representation(instance)
-        #     repr['client'] =

@@ -5,6 +5,7 @@ class FormInflow(forms.ModelForm):
     class Meta:
         model = ModelInflow
         fields = '__all__'
+        exclude = ['paid_date']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
