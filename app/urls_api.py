@@ -5,4 +5,5 @@ urlpatterns =[
     path('projects/', include('projects.urls_api')),
     path('clients/', include('clients.urls_api')),
     path('inflows/', include('inflows.urls_api')),
+    path('suppliers/', include('supplier.urls_api')),
 ]
