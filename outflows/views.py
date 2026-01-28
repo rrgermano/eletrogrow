@@ -2,8 +2,14 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView, CreateView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from django.db import transaction
 from .forms import FormOutflow, FormUpdateOutflow, FormOutflowTypeChoice
 from .models import ModelOutflow, ModelCreditOutflow, OutflowTypeChoice
+from .serializers import OutflowCreditSerializer, OutflowSerializer, OutflowTypeSerializer, QuerySetOutflowSerializer
 from supplier.models import ModelSupplier
 from projects.models import ModelProject
 from dateutil.relativedelta import relativedelta
@@ -218,16 +224,301 @@ class DeleteOutflowTypeChoice(LoginRequiredMixin, DeleteView):
     success_url = '/outflow/new/'
 
 def favored_autocomplete(request):
-    query = request.GET.get('q', '')
+    if request.user.is_authenticated:
+        query = request.GET.get('q', '')
 
-    suppliers = ModelSupplier.objects.filter(name__icontains=query).order_by('name')[:20]
-    results = [{"id": supplier.id, "text": supplier.name} for supplier in suppliers]
+        suppliers = ModelSupplier.objects.filter(name__icontains=query).order_by('name')[:20]
+        results = [{"id": supplier.id, "text": supplier.name} for supplier in suppliers]
+    else:
+        results = {}
     return JsonResponse({"results": results})
 
 def project_autocomplete(request):
-    query = request.GET.get('q', '')
+    if request.user.is_authenticated:
+        query = request.GET.get('q', '')
 
-    projects = ModelProject.objects.filter(name__icontains=query).order_by('name')[:20]
-    results = [{"id": project.id, "text": project.name} for project in projects]
+        projects = ModelProject.objects.filter(name__icontains=query).order_by('name')[:20]
+        results = [{"id": project.id, "text": project.name} for project in projects]
+    else:
+        results = {}
     return JsonResponse({"results": results})
+
+class ListCreateOutflowApiView(ListCreateAPIView):
+    #queryset = ModelOutflow.objects.all().order_by('-date')
+    permission_classes = [IsAuthenticated]
+    serializer_class = OutflowSerializer
+
+    def get_queryset(self):
+        serializer = QuerySetOutflowSerializer(data=self.request.query_params)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        refund = data.get('refund', None)
+        start_date = data.get('start_date', None)
+        end_date = data.get('end_date', None)
+        paid = data.get('paid', None)
+        queryset = ModelOutflow.objects.all()
+        match refund:
+            case 'refund':
+                queryset = queryset.filter(type__name__iexact='reembolso')
+            case 'not_refund':
+                queryset = queryset.exclude(type__name__iexact='reembolso')
+        match paid:
+            case 'paid':
+                queryset = queryset.filter(paid=True)
+            case 'not_paid':
+                queryset = queryset.filter(paid=False)
+        if start_date:
+            queryset = queryset.filter(date__gte=start_date)
+        if end_date:
+            queryset = queryset.filter(date__lte=end_date)
+        return queryset.order_by('-date')
+
+class RetrieveUpdateDestroyOutflowApiView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = ModelOutflow.objects.all()
+    serializer_class = OutflowSerializer
+class ListCreateCreditOutflowApiView(ListCreateAPIView):
+    """
+    GET  /api/credit-outflows/     → Lista todas as despesas de crédito
+    POST /api/credit-outflows/     → Cria nova despesa (com parcelamento opcional)
+
+    Exemplo POST:
+    {
+        "expense": "Notebook Dell",
+        "favored": 1,
+        "value": 3600.00,
+        "installments": 12,
+        "type": [1, 2],
+        "date": "2026-01-26",
+        "project": 3
+    }
+    """
+    #queryset = ModelCreditOutflow.objects.all().order_by('-date')
+    permission_classes = [IsAuthenticated]
+    serializer_class = OutflowCreditSerializer
+
+    def get_queryset(self):
+        serializer = QuerySetOutflowSerializer(data=self.request.query_params)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        refund = data.get('refund', None)
+        start_date = data.get('start_date', None)
+        end_date = data.get('end_date', None)
+        paid = data.get('paid', None)
+        queryset = ModelCreditOutflow.objects.all()
+        match refund:
+            case 'refund':
+                queryset = queryset.filter(type__name__iexact='reembolso')
+            case 'not_refund':
+                queryset = queryset.exclude(type__name__iexact='reembolso')
+        match paid:
+            case 'paid':
+                queryset = queryset.filter(closing=True)
+            case 'not_paid':
+                queryset = queryset.filter(closing=False)
+        if start_date:
+            queryset = queryset.filter(date__gte=start_date)
+        if end_date:
+            queryset = queryset.filter(date__lte=end_date)
+        #print(f'refund: {refund} queryset {queryset}')
+        return queryset.order_by('-date', '-closing')
+    def create(self, request, *args, **kwargs):
+        """Override para retornar mensagem customizada"""
+        #print(f'create credit {request.data}')
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        num_installments = request.data.get('installments', 1)
+        instance = serializer.save()
+
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(
+            {
+                'message': f'Despesa criada com sucesso! {num_installments} parcela(s) gerada(s).',
+                'installments_count': num_installments,
+                'first_installment': serializer.data
+            },
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
+
+
+class RetrieveUpdateDestroyCreditOutflowApiView(RetrieveUpdateDestroyAPIView):
+    """
+    GET    /api/credit-outflows/{id}/   → Detalhes de uma despesa
+    PUT    /api/credit-outflows/{id}/   → Atualiza despesa completa
+    PATCH  /api/credit-outflows/{id}/   → Atualiza parcialmente
+    DELETE /api/credit-outflows/{id}/   → Deleta despesa
+
+    ATUALIZAÇÃO INTELIGENTE:
+    - Se a despesa for parcelada (ex: "Compra (2/12)"), atualiza TODAS as parcelas
+    - Respeita parcelas com closing=True (não modifica se já fechadas)
+    - Atualiza datas a partir da data informada (primeira parcela = data informada, demais = dia 27)
+    """
+    #queryset = ModelCreditOutflow.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = OutflowCreditSerializer
+
+    def get_queryset(self):
+        serializer = QuerySetOutflowSerializer(data=self.request.query_params)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        refund = data.get('refund', None)
+        start_date = data.get('start_date', None)
+        end_date = data.get('end_date', None)
+        paid = data.get('paid', None)
+        queryset = ModelCreditOutflow.objects.all()
+        match refund:
+            case 'refund':
+                queryset = queryset.filter(refund=True)
+            case 'not_refund':
+                queryset = queryset.exclude(refund=True)
+        match paid:
+            case 'paid':
+                queryset = queryset.filter(paid=True)
+            case 'not_paid':
+                queryset = queryset.filter(paid=False)
+        if start_date:
+            queryset = queryset.filter(due_date__gte=start_date)
+        if end_date:
+            queryset = queryset.filter(due_date__lte=end_date)
+        return queryset
+    def _find_all_installments(self, instance):
+        """
+        Encontra todas as parcelas relacionadas baseado no padrão do expense.
+
+        Returns:
+            tuple: (expense_base, current_installment, total_installments, all_installments_queryset)
+                   ou (None, None, None, None) se não for parcelado
+        """
+        expense = instance.expense
+
+        # Verifica se é parcelado: "Descrição (X/Y)"
+        if '(' not in expense or '/' not in expense:
+            return None, None, None, None
+
+        try:
+            # Extrai "Descrição" e "X/Y"
+            expense_base = expense[:expense.rfind('(')].strip()
+            parcel_info = expense[expense.rfind('(') + 1:expense.rfind(')')]
+            current, total = map(int, parcel_info.split('/'))
+
+            # Busca todas as parcelas com o mesmo padrão
+            all_installments = ModelCreditOutflow.objects.filter(
+                expense__startswith=expense_base
+            ).filter(
+                expense__contains=f'/{total})'
+            ).order_by('date')
+
+            return expense_base, current, total, all_installments
+
+        except (ValueError, IndexError):
+            return None, None, None, None
+
+    @transaction.atomic
+    def update(self, request, *args, **kwargs):
+        """Atualização inteligente de parcelas"""
+        #print(f'update credit {request.data}')
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+
+        # Verifica se é parcelado
+        expense_base, current, total, all_installments = self._find_all_installments(instance)
+
+        # Se não for parcelado, atualização normal
+        if not expense_base:
+            return super().update(request, *args, **kwargs)
+
+        # Verifica se alguma parcela já foi fechada
+        closed_installments = all_installments.filter(closing=True).order_by('date')
+
+        if closed_installments.exists():
+            first_closed = closed_installments.first()
+            first_closed_expense = first_closed.expense
+
+            try:
+                closed_number = int(
+                    first_closed_expense[first_closed_expense.rfind('(') + 1:first_closed_expense.rfind('/')].strip()
+                )
+
+                return Response(
+                    {
+                        'error': f'Não é possível atualizar. A parcela {closed_number}/{total} já está com closing=True.',
+                        'closed_installment_id': first_closed.id,
+                        'closed_installment_date': first_closed.date
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            except:
+                return Response(
+                    {
+                        'error': 'Não é possível atualizar. Há parcelas com closing=True.',
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+        # Pega dados para atualização
+        update_data = request.data.copy()
+        new_date = update_data.get('date', instance.date)
+        new_value_total = update_data.get('value')
+        new_expense = update_data.get('expense', expense_base)
+        new_types = update_data.get('type')
+
+        # Se informou valor, divide pelas parcelas
+        if new_value_total:
+            parcel_value = round(float(new_value_total) / total, 2)
+        else:
+            # Mantém o valor atual da parcela
+            parcel_value = instance.value
+
+        # Atualiza todas as parcelas
+        updated_count = 0
+
+        for i, installment in enumerate(all_installments, start=1):
+            # Calcula nova data
+            if i == 1:
+                installment_date = new_date
+            else:
+                installment_date = new_date + relativedelta(months=i - 1)
+                installment_date = installment_date.replace(day=27)
+
+            # Atualiza campos
+            installment.expense = f"{new_expense} ({i}/{total})"
+            installment.date = installment_date
+            installment.value = parcel_value
+
+            # Atualiza outros campos se fornecidos
+            if 'favored' in update_data:
+                installment.favored_id = update_data['favored']
+            if 'project' in update_data:
+                installment.project_id = update_data['project']
+            if 'closing' in update_data:
+                installment.closing = update_data['closing']
+
+            installment.save()
+
+            # Atualiza tipos se fornecidos
+            if new_types is not None:
+                installment.type.set(new_types)
+
+            updated_count += 1
+
+        # Retorna a primeira parcela atualizada
+        first_installment = all_installments.first()
+        serializer = self.get_serializer(first_installment)
+
+        return Response(
+            {
+                'message': f'{updated_count} parcelas atualizadas com sucesso.',
+                'total_installments': total,
+                'first_installment': serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
+
+class ListCreateTypeOutflowApiView(ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = OutflowTypeChoice.objects.all()
+    serializer_class = OutflowTypeSerializer
 

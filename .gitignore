@@ -1,6 +1,8 @@
 /.idea
 db.sqlite3
 venv
+/venv
+.venv
 db.sqlite3
 media
 **/__pycache__/
@@ -9,3 +11,4 @@ __pycache__
 .DS_Store
 notion/secrets_eletrogrow.py
 *.pyc
+*.json

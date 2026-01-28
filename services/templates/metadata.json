@@ -1,0 +1,5 @@
+{
+  "name": "ERP Service Order Manager",
+  "description": "A professional ERP dashboard for managing service orders with both list and interactive calendar views, featuring search, date filtering, and mobile-responsive design.",
+  "requestFramePermissions": []
+}

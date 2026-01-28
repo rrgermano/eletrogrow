@@ -1,7 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import IsAuthenticated
 from .models import ModelSupplier
 from .forms import FormSupplier
+from .serializers import SupplierSerializer
+
 
 
 
@@ -36,3 +40,14 @@ class DeleteSupplier(LoginRequiredMixin, DeleteView):
     model = ModelSupplier
     template_name = 'delete_supplier.html'
     success_url = '/supplier/'
+
+class ListCreateSupplierApiView(ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = ModelSupplier.objects.all()
+    serializer_class = SupplierSerializer
+
+
+class RetrieveUpdateDestroySupplierApiView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = ModelSupplier.objects.all()
+    serializer_class = SupplierSerializer

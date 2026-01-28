@@ -1,7 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import IsAuthenticated
 from .models import ModelInflow
 from .forms import FormInflow
+from .serializers import InflowSerializer, QuerySetInflowSerializer
 
 
 class ListInflow(LoginRequiredMixin, ListView):
@@ -65,3 +68,39 @@ class DeleteInflow(LoginRequiredMixin, DeleteView):
     model = ModelInflow
     template_name = 'delete_inflow.html'
     success_url = '/inflow/'
+
+class ListCreateInflowApiView(ListCreateAPIView):
+    #queryset = ModelInflow.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = InflowSerializer
+
+    def get_queryset(self):
+        serializer = QuerySetInflowSerializer(data=self.request.query_params)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        refund = data.get('refund', None)
+        start_date = data.get('start_date', None)
+        end_date = data.get('end_date', None)
+        paid = data.get('paid', None)
+        queryset = ModelInflow.objects.all()
+        match refund:
+            case 'refund':
+                queryset = queryset.filter(refund=True)
+            case 'not_refund':
+                queryset = queryset.exclude(refund=True)
+        match paid:
+            case 'paid':
+                queryset = queryset.filter(paid=True)
+            case 'not_paid':
+                queryset = queryset.filter(paid=False)
+        if start_date:
+            queryset = queryset.filter(due_date__gte=start_date)
+        if end_date:
+            queryset = queryset.filter(due_date__lte=end_date)
+        return queryset.order_by('-due_date')
+
+
+class RetrieveUpdateDestroyInflowApiView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = ModelInflow.objects.all().order_by('-due_date')
+    serializer_class = InflowSerializer
