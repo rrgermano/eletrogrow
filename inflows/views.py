@@ -97,10 +97,10 @@ class ListCreateInflowApiView(ListCreateAPIView):
             queryset = queryset.filter(due_date__gte=start_date)
         if end_date:
             queryset = queryset.filter(due_date__lte=end_date)
-        return queryset
+        return queryset.order_by('-due_date')
 
 
 class RetrieveUpdateDestroyInflowApiView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = ModelInflow.objects.all()
+    queryset = ModelInflow.objects.all().order_by('-due_date')
     serializer_class = InflowSerializer

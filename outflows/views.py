@@ -259,9 +259,9 @@ class ListCreateOutflowApiView(ListCreateAPIView):
         queryset = ModelOutflow.objects.all()
         match refund:
             case 'refund':
-                queryset = queryset.filter(refund=True)
+                queryset = queryset.filter(type__name__iexact='reembolso')
             case 'not_refund':
-                queryset = queryset.exclude(refund=True)
+                queryset = queryset.exclude(type__name__iexact='reembolso')
         match paid:
             case 'paid':
                 queryset = queryset.filter(paid=True)
@@ -271,7 +271,7 @@ class ListCreateOutflowApiView(ListCreateAPIView):
             queryset = queryset.filter(date__gte=start_date)
         if end_date:
             queryset = queryset.filter(date__lte=end_date)
-        return queryset
+        return queryset.order_by('-date')
 
 class RetrieveUpdateDestroyOutflowApiView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
@@ -305,22 +305,23 @@ class ListCreateCreditOutflowApiView(ListCreateAPIView):
         start_date = data.get('start_date', None)
         end_date = data.get('end_date', None)
         paid = data.get('paid', None)
-        queryset = ModelOutflow.objects.all()
+        queryset = ModelCreditOutflow.objects.all()
         match refund:
             case 'refund':
-                queryset = queryset.filter(refund=True)
+                queryset = queryset.filter(type__name__iexact='reembolso')
             case 'not_refund':
-                queryset = queryset.exclude(refund=True)
+                queryset = queryset.exclude(type__name__iexact='reembolso')
         match paid:
             case 'paid':
-                queryset = queryset.filter(paid=True)
+                queryset = queryset.filter(closing=True)
             case 'not_paid':
-                queryset = queryset.filter(paid=False)
+                queryset = queryset.filter(closing=False)
         if start_date:
             queryset = queryset.filter(date__gte=start_date)
         if end_date:
             queryset = queryset.filter(date__lte=end_date)
-        return queryset
+        #print(f'refund: {refund} queryset {queryset}')
+        return queryset.order_by('-date', '-closing')
     def create(self, request, *args, **kwargs):
         """Override para retornar mensagem customizada"""
         #print(f'create credit {request.data}')
