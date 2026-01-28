@@ -2,8 +2,6 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from localflavor.br.models import BRCPFField, BRCNPJField, BRPostalCodeField, BRStateField
 from django.core.exceptions import ValidationError
-from django.db.models import UniqueConstraint
-from django.db.models.functions import Lower
 
 
 class ModelSupplier(models.Model):
@@ -22,8 +20,6 @@ class ModelSupplier(models.Model):
         super().clean()
         if self.cpf and self.cnpj:
             raise ValidationError('Informe apenas CPF ou CNPJ, não ambos')
-        if ModelSupplier.objects.filter(name__iexact=self.name).exists():
-            raise ValidationError('Nome desse fornecedor já existe')
         
    
 

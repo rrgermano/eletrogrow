@@ -4,6 +4,7 @@ from .models import ModelClient
 from .forms import FormClient
 from .serializers import ClientSerializer
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import IsAuthenticated
 
 
 
@@ -40,9 +41,11 @@ class DeleteClient(LoginRequiredMixin, DeleteView):
     success_url = '/client/'
 
 class ListCreateClientApiView(ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = ModelClient.objects.all()
     serializer_class = ClientSerializer
 
 class RetriveDeleteUpdateClientApiView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = ModelClient.objects.all()
     serializer_class = ClientSerializer

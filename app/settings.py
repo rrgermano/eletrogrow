@@ -23,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-2vnb9$b##f)y$k4k(qt%9v&e8t48m)(lo=qq^%gzcn7!oo0ehj'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*','192.168.15.129', '192.168.15.86', '192.168.15.58', 'localhost', '127.0.0.1',  'intranet.eletrogrow.com.br']
-CSRF_TRUSTED_ORIGINS = ['http://192.168.15.58', 'http://localhost', 'http://127.0.0.1', 'http://intranet.eletrogrow.com.br', 'https://intranet.eletrogrow.com.br']
+ALLOWED_HOSTS = ['*','192.168.15.129', '192.168.15.86', '192.168.15.58', 'localhost', '127.0.0.1',  'server.eletrogrow.com.br']
+CSRF_TRUSTED_ORIGINS = ['http://192.168.15.58', 'http://localhost', 'http://127.0.0.1', 'http://server.eletrogrow.com.br', 'https://server.eletrogrow.com.br']
 
 # Application definition
 
@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django_user_agents',
     'rest_framework',
     'corsheaders',
+#    'debug_toolbar',
+    'rest_framework_simplejwt',
 
     'clients',
     'projects',
@@ -49,6 +51,11 @@ INSTALLED_APPS = [
     'outflows',
     'supplier',
     'services',
+    'dashboard',
+]
+
+INTERNAL_IPS = [
+    '127.0.0.1',
 ]
 
 LOGIN_URL = 'login'
@@ -67,7 +74,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'django_user_agents.middleware.UserAgentMiddleware',
-
+#    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -89,6 +96,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -153,4 +167,7 @@ CACHES = {
 
 USER_AGENTS_CACHE = 'default'
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'https://intranet.eletrogrow.com.br'
+]

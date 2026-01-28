@@ -11,3 +11,4 @@ __pycache__
 .DS_Store
 notion/secrets_eletrogrow.py
 *.pyc
+*.json

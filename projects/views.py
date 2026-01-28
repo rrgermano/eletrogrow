@@ -4,6 +4,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from .models import ModelProject
 from .forms import FormProject
@@ -45,16 +46,13 @@ class DeleteProject(LoginRequiredMixin, DeleteView):
     success_url = '/project/'
 
 class ListCreateProjectApiView(ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = ModelProject.objects.all()
     serializer_class = ProjectSerializer
 
 class RetrieveUpdateDeleteProjectApiView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = ModelProject.objects.all()
     serializer_class = ProjectSerializer
-@api_view(['GET'])
-def get_project_name(request, pk):
-    client = get_object_or_404(ModelClient, pk=pk)
-    response = {'project_name': project_name(client, ModelProject)}
-    return Response(response, status=status.HTTP_200_OK)
 
 

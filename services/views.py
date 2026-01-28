@@ -1,17 +1,16 @@
 from .models import ModelService, ModelTask
 from .serializers import ServiceSerializer, TaskSerializer
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from pprint import pprint
+from rest_framework.permissions import IsAuthenticated
 
 class ListCreateServicesView(ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = ModelService.objects.all()
     serializer_class = ServiceSerializer
-    # def create(self, request, *args, **kwargs):
-    #     pprint(request.data, indent=1)
-    #     return super().create(request, *args, **kwargs)
 
 
 class RetriveUpdateDestroyServicesView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = ModelService.objects.all()
     serializer_class = ServiceSerializer
     # def update(self, request, *args, **kwargs):
@@ -29,6 +28,7 @@ class ListCreateTasksView(ListCreateAPIView):
     - ?created_in_service={id} - Filtra por service de criação
     - ?completed_in_service={id} - Filtra por service de conclusão
     """
+    permission_classes = [IsAuthenticated]
     queryset = ModelTask.objects.all()
     serializer_class = TaskSerializer
     
@@ -82,6 +82,7 @@ class RetrieveUpdateDestroyTasksView(RetrieveUpdateDestroyAPIView):
     PUT/PATCH /tasks/{id}/ - Atualiza tarefa e gerencia subtarefas
     DELETE /tasks/{id}/ - Deleta tarefa e todas subtarefas em cascata
     """
+    permission_classes = [IsAuthenticated]
     queryset = ModelTask.objects.all()
     serializer_class = TaskSerializer
     
