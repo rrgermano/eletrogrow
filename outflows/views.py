@@ -271,11 +271,11 @@ class ListCreateOutflowApiView(ListCreateAPIView):
             queryset = queryset.filter(date__gte=start_date)
         if end_date:
             queryset = queryset.filter(date__lte=end_date)
-        return queryset.order_by('-date')
+        return queryset.order_by('-id', '-date')
 
 class RetrieveUpdateDestroyOutflowApiView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = ModelOutflow.objects.all()
+    queryset = ModelOutflow.objects.all().order_by('-id')
     serializer_class = OutflowSerializer
 class ListCreateCreditOutflowApiView(ListCreateAPIView):
     """
@@ -321,7 +321,9 @@ class ListCreateCreditOutflowApiView(ListCreateAPIView):
         if end_date:
             queryset = queryset.filter(date__lte=end_date)
         #print(f'refund: {refund} queryset {queryset}')
-        return queryset.order_by('-date', '-closing')
+        return queryset.order_by('-id', '-date', '-closing')
+    
+
     def create(self, request, *args, **kwargs):
         """Override para retornar mensagem customizada"""
         #print(f'create credit {request.data}')
@@ -383,7 +385,7 @@ class RetrieveUpdateDestroyCreditOutflowApiView(RetrieveUpdateDestroyAPIView):
             queryset = queryset.filter(due_date__gte=start_date)
         if end_date:
             queryset = queryset.filter(due_date__lte=end_date)
-        return queryset
+        return queryset.order_by('-id')
     def _find_all_installments(self, instance):
         """
         Encontra todas as parcelas relacionadas baseado no padrão do expense.

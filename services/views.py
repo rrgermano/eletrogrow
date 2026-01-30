@@ -5,17 +5,14 @@ from rest_framework.permissions import IsAuthenticated
 
 class ListCreateServicesView(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = ModelService.objects.all()
+    queryset = ModelService.objects.all().order_by('-updated_at')
     serializer_class = ServiceSerializer
 
 
 class RetriveUpdateDestroyServicesView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = ModelService.objects.all()
-    serializer_class = ServiceSerializer
-    # def update(self, request, *args, **kwargs):
-    #     pprint(request.data, indent=1)
-    #     return super().update(request, *args, **kwargs) 
+    queryset = ModelService.objects.all().order_by('-updated_at')
+    serializer_class = ServiceSerializer 
 
 class ListCreateTasksView(ListCreateAPIView):
     """

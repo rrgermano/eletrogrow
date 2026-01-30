@@ -42,10 +42,10 @@ class DeleteClient(LoginRequiredMixin, DeleteView):
 
 class ListCreateClientApiView(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = ModelClient.objects.all()
+    queryset = ModelClient.objects.all().order_by('-id')
     serializer_class = ClientSerializer
 
 class RetriveDeleteUpdateClientApiView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = ModelClient.objects.all()
+    queryset = ModelClient.objects.all().order_by('-id')
     serializer_class = ClientSerializer

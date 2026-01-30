@@ -43,11 +43,11 @@ class DeleteSupplier(LoginRequiredMixin, DeleteView):
 
 class ListCreateSupplierApiView(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = ModelSupplier.objects.all()
+    queryset = ModelSupplier.objects.all().order_by('-id')
     serializer_class = SupplierSerializer
 
 
 class RetrieveUpdateDestroySupplierApiView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = ModelSupplier.objects.all()
+    queryset = ModelSupplier.objects.all().order_by('-id')
     serializer_class = SupplierSerializer

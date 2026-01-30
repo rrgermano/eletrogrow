@@ -47,12 +47,10 @@ class DeleteProject(LoginRequiredMixin, DeleteView):
 
 class ListCreateProjectApiView(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = ModelProject.objects.all()
+    queryset = ModelProject.objects.all().order_by('-id')
     serializer_class = ProjectSerializer
 
 class RetrieveUpdateDeleteProjectApiView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = ModelProject.objects.all()
+    queryset = ModelProject.objects.all().order_by('-id')
     serializer_class = ProjectSerializer
-
-
