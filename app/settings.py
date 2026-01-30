@@ -166,7 +166,7 @@ CACHES = {
 }
 
 USER_AGENTS_CACHE = 'default'
-CORS_ALLOW_ALL_ORIGINS = True
+#CORS_ALLOW_ALL_ORIGINS = True
 
 
 CORS_ALLOW_HEADERS = [
@@ -179,12 +179,12 @@ CORS_ALLOW_HEADERS = [
     "user-agent",
     "x-csrftoken",
     "x-requested-with",
-    "x-forwarded-proto",
+#    "x-forwarded-proto",
 ]
 
 
-#CORS_ALLOWED_ORIGINS = [
-#    'http://localhost:3000',
-#    'https://intranet.eletrogrow.com.br'
-#]
+CORS_ALLOWED_ORIGINS = [
+   'http://localhost:3000',
+   'https://intranet.eletrogrow.com.br'
+]
 
