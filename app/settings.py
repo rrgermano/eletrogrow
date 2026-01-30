@@ -174,5 +174,3 @@ CORS_ALLOW_ALL_ORIGINS = True
 #    'https://intranet.eletrogrow.com.br'
 #]
 
-CORS_ALLOW_ALL_ORIGINS = True
-
