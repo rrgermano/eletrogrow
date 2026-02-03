@@ -510,7 +510,7 @@ class ProjectStatsAPIView(APIView):
         }
 
         serializer = ProjectStatsSerializer(data)
-        print(serializer.data)
+        #print(serializer.data)
         return Response(serializer.data)
 
 
