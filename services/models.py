@@ -21,7 +21,7 @@ class ModelService(models.Model):
     service_type = models.CharField(choices=OS_TYPE_CHOICES, default='COR', verbose_name='Tipo de Serviço')
     description = models.TextField(verbose_name='Descriçao do serviço')
     closing = models.BooleanField(default=False)
-    date = models.DateField(auto_now_add=True)
+    date = models.DateField()
     updated_at = models.DateField(auto_now=True)
     status = models.CharField(choices=OS_STATUS_CHOICES, default='OPEN', verbose_name='Status')
 
