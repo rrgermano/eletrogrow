@@ -20,5 +20,6 @@ class ModelProject(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        self.name = project_name(self.client, ModelProject)
+        if not self.name:
+            self.name = project_name(self.client, ModelProject)
         super().save(*args, **kwargs)
