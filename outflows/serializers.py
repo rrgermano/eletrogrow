@@ -64,10 +64,10 @@ class OutflowCreditSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
 
         # Detecta se é parcelado pelo formato do expense
-        if '(' in instance.expense and '/' in instance.expense:
+        if '-' in instance.expense and '/' in instance.expense:
             try:
                 # Extrai "1/3" do "Descrição (1/3)"
-                parcel_info = instance.expense[instance.expense.rfind('(') + 1:instance.expense.rfind(')')]
+                parcel_info = instance.expense[instance.expense.rfind('-') + 2:]
                 current, total = parcel_info.split('/')
                 data['installment_info'] = {
                     'current': int(current),

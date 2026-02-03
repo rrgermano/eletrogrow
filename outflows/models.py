@@ -86,7 +86,7 @@ class ModelCreditOutflow(models.Model):
 
         # Atualiza a primeira parcela (self)
         original_expense = self.expense
-        self.expense = f"{original_expense} (1/{num_installments})"
+        self.expense = f"{original_expense} - 1/{num_installments}"
         self.value = parcel_value
         self.save()
 
@@ -99,7 +99,7 @@ class ModelCreditOutflow(models.Model):
             installment_date = installment_date.replace(day=27)
 
             installment = ModelCreditOutflow(
-                expense=f"{original_expense} ({i}/{num_installments})",
+                expense=f"{original_expense} - {i}/{num_installments}",
                 favored=self.favored,
                 date=installment_date,
                 project=self.project,
