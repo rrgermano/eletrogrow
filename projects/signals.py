@@ -19,5 +19,7 @@ def project_installment(sender, instance, **kwargs):
             due_date=is_date_util(instance.due_date + relativedelta(months=parcel)),
             value=parcel_value,
         )
+    instance.inflows.update(due_date=is_date_util(instance.due_date))
+
 
 
