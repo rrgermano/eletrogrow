@@ -11,15 +11,17 @@ def project_installment(sender, instance, **kwargs):
     if inflows:
         for income in inflows:
             income.delete()
+    created_ids = []
     parcel_value = instance.value/instance.parcel
     for parcel in range(instance.parcel):
-        ModelInflow.objects.create(
+        inflow = ModelInflow.objects.create(
             income=f'{instance.name} - {parcel+1}/{instance.parcel}',
             project=instance,
             due_date=is_date_util(instance.due_date + relativedelta(months=parcel)),
             value=parcel_value,
         )
-    instance.inflows.update(due_date=is_date_util(instance.due_date))
+        created_ids.append(inflow.id)
+    instance.inflows.exclude(id__in=created_ids).update(due_date=is_date_util(instance.due_date))
 
 
 
