@@ -577,12 +577,12 @@ class EarningsPeriodChartAPIView(APIView):
             paid_date__gte=start_date,
             paid_date__lte=end_date,
             paid_date__isnull=False
-        ).order_by('value')
+        ).order_by('-value')
 
         base_outflows = ModelOutflow.objects.filter(
             date__gte=start_date,
             date__lte=end_date
-        ).order_by('value')
+        ).order_by('-value')
 
         # ======================================================
         # CONSOLIDA DADOS
