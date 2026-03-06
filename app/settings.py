@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-2vnb9$b##f)y$k4k(qt%9v&e8t48m)(lo=qq^%gzcn7!oo0ehj'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*','192.168.15.129', '192.168.15.86', '192.168.15.58', 'localhost', '127.0.0.1',  'server.eletrogrow.com.br']
 CSRF_TRUSTED_ORIGINS = ['http://192.168.15.58', 'http://localhost', 'http://127.0.0.1', 'http://server.eletrogrow.com.br', 'https://server.eletrogrow.com.br']
