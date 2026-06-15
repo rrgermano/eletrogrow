@@ -139,6 +139,32 @@ class TaskSerializer(serializers.ModelSerializer):
         if to_delete:
             ModelTask.objects.filter(id__in=to_delete).delete()
 
+    def create(self, validated_data):
+        subtasks_data = validated_data.pop('subtasks', [])
+        task = ModelTask.objects.create(**validated_data)
+        if subtasks_data:
+            self._create_subtasks(task, subtasks_data, task.project, task.created_in_service)
+        task.update_automatic_status()
+        return task
+
+    def update(self, instance, validated_data):
+        subtasks_data = validated_data.pop('subtasks', None)
+        old_completed = instance.completed
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        if not old_completed and instance.completed and not instance.completed_in_service:
+            instance.completed_in_service = instance.created_in_service
+
+        instance.save()
+
+        if subtasks_data is not None:
+            self._manage_subtasks(instance, subtasks_data, instance.project)
+
+        instance.update_automatic_status()
+        return instance
+
 
 class ServiceSerializer(serializers.ModelSerializer):
     costumer_name = serializers.ReadOnlyField(source='project.client.name')
